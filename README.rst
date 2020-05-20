@@ -19,6 +19,7 @@ easy interaction with a BrainFrame server.
            connection_options={"url": "rtsp://192.168.1.100"},
            runtime_options={},
        ))
+   api.start_analyzing(stream_config.id)
    # Get results
    analysis_results = api.get_latest_zone_statuses()
 
