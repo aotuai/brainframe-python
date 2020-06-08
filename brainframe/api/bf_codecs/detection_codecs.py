@@ -2,6 +2,7 @@ from typing import Optional, List, Dict
 import uuid
 
 from .base_codecs import Codec
+from .identity_codecs import Identity
 
 
 class Detection(Codec):
@@ -82,37 +83,3 @@ class Attribute(Codec):
     def from_dict(d):
         return Attribute(category=d["category"],
                          value=d["value"])
-
-
-class Identity(Codec):
-    """A specific, recognizable object or person."""
-
-    def __init__(self, *, unique_name, nickname, metadata=None, id_=None):
-        self.unique_name = unique_name
-        """The unique id of the identified detection.
-        
-        Not to be confused with the id_ field of the object which is a field
-        used by the database.
-        """
-
-        self.nickname = nickname
-        """A display name for the identity which may not be unique, like a
-        person's name.
-        """
-
-        self.metadata = {} if metadata is None else metadata
-        """Any additional user-defined information about the identity."""
-
-        self.id = id_
-        """A unique identifier."""
-
-    def to_dict(self):
-        return self.__dict__
-
-    @staticmethod
-    def from_dict(d):
-        return Identity(
-            id_=d["id"],
-            unique_name=d["unique_name"],
-            nickname=d["nickname"],
-            metadata=d["metadata"])

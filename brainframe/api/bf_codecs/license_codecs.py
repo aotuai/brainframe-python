@@ -14,9 +14,21 @@ class LicenseTerms(Codec):
                  journal_max_allowed_age: float,
                  expiration_date: Optional[date]):
         self.online_checkin = online_checkin
+        """If true, the server will check in with a remote licensing server to
+        verify license terms.
+        """
         self.max_streams = max_streams
+        """The maximum number of streams that may have analysis enabled at any
+        given time.
+        """
         self.journal_max_allowed_age = journal_max_allowed_age
+        """The maximum amount of time in seconds that the server may hold data
+        in the journal for.
+        """
         self.expiration_date = expiration_date
+        """The date that this license expires, or None if the license is
+        perpetual.
+        """
 
     def to_dict(self) -> dict:
         d = dict(self.__dict__)
@@ -55,11 +67,13 @@ class LicenseState(Enum):
 class LicenseInfo(Codec):
     """Information on the licensing status of the server"""
 
-    State = LicenseState
-
-    def __init__(self, *, state: State, terms: Optional[LicenseTerms]):
+    def __init__(self, *, state: LicenseState, terms: Optional[LicenseTerms]):
         self.state = state
+        """The licensing state of the server."""
         self.terms = terms
+        """The active license terms of the server, or None if no license is
+        loaded.
+        """
 
     def to_dict(self) -> dict:
         return {

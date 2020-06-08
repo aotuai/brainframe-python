@@ -10,6 +10,7 @@ class ZoneStubMixin(BaseStub):
     def get_zones(self, stream_id=None,
                   timeout=DEFAULT_TIMEOUT) -> List[Zone]:
         """Gets all zones.
+
         :param stream_id: If set, only zones in the stream with this ID are
             returned
         :param timeout: The timeout to use for this request
@@ -24,6 +25,7 @@ class ZoneStubMixin(BaseStub):
     def get_zone(self, zone_id,
                  timeout=DEFAULT_TIMEOUT) -> Zone:
         """Get a specific zone.
+
         :param zone_id: The ID of the zone to get
         :param timeout: The timeout to use for this request
         """
@@ -35,6 +37,7 @@ class ZoneStubMixin(BaseStub):
                  timeout=DEFAULT_TIMEOUT):
         """Update or create a zone. If the Zone doesn't exist, the zone.id
         must be None. An initialized Zone with an ID will be returned.
+
         :param zone: A Zone object
         :param timeout: The timeout to use for this request
         :return: Zone, initialized with an ID
@@ -47,6 +50,7 @@ class ZoneStubMixin(BaseStub):
     def delete_zone(self, zone_id: int,
                     timeout=DEFAULT_TIMEOUT):
         """Deletes a zone with the given ID.
+
         :param zone_id: The ID of the zone to delete
         :param timeout: The timeout to use for this request
         """

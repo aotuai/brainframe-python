@@ -10,7 +10,8 @@ from .condition_codecs import (
     DirectionType,
 )
 from .config_codecs import StreamConfiguration, ConnType
-from .detection_codecs import Attribute, Detection, Identity
+from .identity_codecs import Identity, Encoding
+from .detection_codecs import Attribute, Detection
 from .zone_codecs import Zone, ZoneStatus
 from .plugin_codecs import (
     PluginOption,
@@ -19,9 +20,8 @@ from .plugin_codecs import (
     OptionType,
     SizeType,
 )
-from .encoding_codecs import Encoding
-from .premises_codec import Premises
-from .user_codec import User, RoleType
+from .premises_codecs import Premises
+from .user_codecs import User, RoleType
 from .license_codecs import (
     LicenseTerms,
     LicenseInfo,

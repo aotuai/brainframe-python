@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from .base_codecs import Codec
 from .condition_codecs import ZoneAlarmCountCondition, ZoneAlarmRateCondition
@@ -48,24 +48,30 @@ class ZoneAlarm(Codec):
 
 
 class Alert(Codec):
-    """This is sent when an Alarm has been triggered.
-    An alert can be sent WITHOUT an end_time, but never without a start_time.
-
-    self.verified_as can be True, False or None.
-        If True, then this alert was labeled by a person as being legitimate
-        If False,then this alert was labeled by a person as being a false alarm
-        If None, then this alert has not been labeled yet.
-    """
+    """This is sent when an Alarm has been triggered."""
 
     def __init__(self, *, alarm_id, zone_id, stream_id, start_time, end_time,
                  verified_as, id_=None):
-        self.id = id_
-        self.alarm_id = alarm_id
-        self.zone_id = zone_id
-        self.stream_id = stream_id
-        self.start_time = start_time
-        self.end_time = end_time
-        self.verified_as = verified_as
+        self.id: int = id_
+        """A unique identifier"""
+        self.alarm_id: int = alarm_id
+        """The ID of the alarm that this alert came from"""
+        self.zone_id: int = zone_id
+        """The ID of the zone this alert pertains to"""
+        self.stream_id: int = stream_id
+        """The ID of the stream this alert pertains to"""
+        self.start_time: float = start_time
+        """When the event started happening, in Unix Time (seconds)"""
+        self.end_time: Optional[float] = end_time
+        """When the event stopped happening, in Unix Time (seconds), or None
+        if the alert is ongoing.
+        """
+        self.verified_as: Optional[bool] = verified_as
+        """
+        - If True, then this alert was labeled by a person as legitimate
+        - If False, then this alert was labeled by a person as a false alarm
+        - If None, then this alert has not been reviewed by a person
+        """
 
     def to_dict(self):
         d = dict(self.__dict__)

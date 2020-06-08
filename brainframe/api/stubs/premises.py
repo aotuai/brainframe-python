@@ -33,6 +33,9 @@ class PremisesStubMixin(BaseStub):
         """Update or create a premises. If the Premises doesn't exist, the
         premises.id must be None. An initialized Premises with an ID will be
         returned.
+
+        Premises are more often created using the StreamGateway client tool.
+
         :param premises: A Premises object
         :param timeout: The timeout to use for this request
         :return: Premises, initialized with an ID

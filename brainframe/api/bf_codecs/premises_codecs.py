@@ -6,7 +6,9 @@ class Premises(Codec):
 
     def __init__(self, *, name: str, id_=None):
         self.id = id_
+        """The unique ID of the premises"""
         self.name = name
+        """The friendly name of the premises"""
 
     def to_dict(self):
         d = dict(self.__dict__)
