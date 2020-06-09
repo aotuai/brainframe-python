@@ -43,6 +43,8 @@ API Methods
 
 .. automethod:: brainframe.api.BrainFrameAPI.stop_analyzing
 
+.. automethod:: brainframe.api.BrainFrameAPI.check_analyzing
+
 .. automethod:: brainframe.api.BrainFrameAPI.delete_stream_configuration
 
 .. automethod:: brainframe.api.BrainFrameAPI.get_stream_url
