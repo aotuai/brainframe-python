@@ -31,3 +31,16 @@ class AnalysisStubMixin(BaseStub):
         req = f"/api/streams/{stream_id}/analyze"
         resp = self._put_json(req, timeout, 'false')
         return resp
+
+    def check_analyzing(self, stream_id,
+                        timeout=DEFAULT_TIMEOUT) -> bool:
+        """Check if this stream is being analyzed
+
+        :param stream_id: The ID of the stream to check
+        :param timeout: The timeout to use for this request
+        :return: True or False if the stream is being analyzed
+        """
+        req = f"/api/streams/{stream_id}/analyze"
+        resp, _ = self._get_json(req, timeout)
+        return resp
+
