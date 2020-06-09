@@ -17,5 +17,8 @@ API Methods
 Data Structures
 ---------------
 
+.. automodule:: brainframe.api.bf_codecs.detection_codecs
+   :members:
+
 .. autoclass:: brainframe.api.bf_codecs.zone_codecs.ZoneStatus
    :members:

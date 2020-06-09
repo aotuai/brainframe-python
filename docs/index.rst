@@ -28,6 +28,7 @@ tested heavily internally before release.
    users
    licenses
    exceptions
+   sorting
 
 Indices and tables
 ==================

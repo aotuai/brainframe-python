@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 import uuid
 
 from .base_codecs import Codec
@@ -6,20 +6,34 @@ from .identity_codecs import Identity
 
 
 class Detection(Codec):
-    """A detected object. It can have 'children', for example, a "person" can
-    have a "face" object as a child. It can also own several Attributes. For
-    example, a "person" can exhibit a behaviour. A Face can have a gender.
+    """An object detected in a video frame. Detections can have attributes
+    attached to them that provide more information about the object as well as
+    other metadata like a unique tracking ID.
     """
 
     def __init__(self, *, class_name, coords, children, attributes,
                  with_identity, extra_data, track_id):
         self.class_name: str = class_name
+        """The class of object that was detected, like 'person' or 'car'"""
         self.coords: List[List[int]] = coords
+        """The coordinates, in pixels, of the detection in the frame"""
         self.children: List[Detection] = children
-        self.attributes: Dict[str: str] = attributes
+        self.attributes: Dict[str, str] = attributes
+        """A dict whose key is an attribute name and whose value is the value
+        of that attribute. For example, a car detection may have an attribute
+        whose key is 'type' and whose value is 'sedan'.
+        """
         self.with_identity: Optional[Identity] = with_identity
-        self.extra_data = extra_data
+        """If not None, this is the identity that this detection was recognized
+        as.
+        """
+        self.extra_data: Dict[str, Any] = extra_data
+        """Any additional metadata describing this object"""
         self.track_id: Optional[uuid.UUID] = track_id
+        """If not None, this is a unique tracking ID for the object. This ID
+        can be compared to detections from other frames to track the movement
+        of an object over time.
+        """
 
     @property
     def center(self):
@@ -74,7 +88,9 @@ class Attribute(Codec):
 
     def __init__(self, *, category=None, value=None):
         self.category = category
+        """The category of attribute being described"""
         self.value = value
+        """The value for this attribute category"""
 
     def to_dict(self):
         return self.__dict__

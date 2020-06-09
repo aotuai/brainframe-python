@@ -17,7 +17,6 @@ class ConnType(Enum):
         return [v.value for v in cls]
 
 
-# Stream Data structures
 class StreamConfiguration(Codec):
     """Describes a video stream that BrainFrame may connect to and analyze.
     """
