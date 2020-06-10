@@ -9,16 +9,21 @@ from .detection_codecs import Detection
 class Zone(Codec):
     """The definition for a zone. It is a non-convex polygon or a line."""
 
-    def __init__(self, *, name, coords, stream_id, alarms=(), id_=None):
-        self.name = name
+    def __init__(self, *,
+                 name: str,
+                 coords: List[List[int]],
+                 stream_id: int,
+                 alarms: List[ZoneAlarm] = (),
+                 id_: int = None):
+        self.name: str = name
         """A friendly name for the zone"""
-        self.id = id_
+        self.id: int = id_
         """A unique identifier"""
-        self.stream_id = stream_id
+        self.stream_id: int = stream_id
         """The ID of the stream this zone is in"""
         self.alarms: List[ZoneAlarm] = list(alarms)
         """All alarms that are attached to the zone"""
-        self.coords = coords
+        self.coords: List[List[int]] = coords
         """Coordinates that define the region the zone occupies. It is a list
         of lists which are two elements in size. The coordinates are in pixels
         where the top left of the frame is [0, 0].
@@ -56,8 +61,15 @@ class ZoneStatus(Codec):
     """The current status of everything going on inside a zone.
     """
 
-    def __init__(self, *, zone, tstamp, within, entering, exiting, alerts,
-                 total_entered, total_exited):
+    def __init__(self, *,
+                 zone: Zone,
+                 tstamp: float,
+                 within: List[Detection],
+                 entering: List[Detection],
+                 exiting: List[Detection],
+                 alerts: List[Alert],
+                 total_entered: dict,
+                 total_exited: dict):
         self.zone: Zone = zone
         """The zone that this status pertains to"""
         self.tstamp: float = tstamp

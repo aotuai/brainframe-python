@@ -14,10 +14,10 @@ class SortOptions:
     certain object.
     """
 
-    def __init__(self, field_name, ordering: Ordering):
-        self.field_name = field_name
+    def __init__(self, field_name: str, ordering: Ordering):
+        self.field_name: str = field_name
         """The name of the field to sort by"""
-        self.ordering = ordering
+        self.ordering: Ordering = ordering
         """The order to sort the field by"""
 
     def query_format(self) -> str:

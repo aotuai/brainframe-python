@@ -11,8 +11,14 @@ class Detection(Codec):
     other metadata like a unique tracking ID.
     """
 
-    def __init__(self, *, class_name, coords, children, attributes,
-                 with_identity, extra_data, track_id):
+    def __init__(self, *,
+                 class_name: str,
+                 coords: List[List[int]],
+                 children: List["Detection"],
+                 attributes: Dict[str, str],
+                 with_identity: Optional[Identity],
+                 extra_data: Dict[str, Any],
+                 track_id: Optional[uuid.UUID]):
         self.class_name: str = class_name
         """The class of object that was detected, like 'person' or 'car'"""
         self.coords: List[List[int]] = coords
@@ -86,10 +92,10 @@ class Attribute(Codec):
     on the client side
     """
 
-    def __init__(self, *, category=None, value=None):
-        self.category = category
+    def __init__(self, *, category: str = None, value: str = None):
+        self.category: str = category
         """The category of attribute being described"""
-        self.value = value
+        self.value: str = value
         """The value for this attribute category"""
 
     def to_dict(self):

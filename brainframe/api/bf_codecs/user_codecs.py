@@ -22,20 +22,21 @@ class RoleType(Enum):
 class User(Codec):
     """Contains information on a user."""
 
-    def __init__(self, *, username: str,
+    def __init__(self, *,
+                 username: str,
                  password: Optional[str],
                  role: RoleType,
-                 id_=None):
-        self.username = username
+                 id_: int = None):
+        self.username: str = username
         """The username used for login"""
-        self.password = password
+        self.password: Optional[str] = password
         """This field will be None when retrieving users from the server. It
         should only be set by the client when creating a new user or updating a
         user's password.
         """
-        self.role = role
+        self.role: RoleType = role
         """The user's role"""
-        self.id = id_
+        self.id: int = id_
         """The user's unique ID"""
 
     def to_dict(self) -> dict:

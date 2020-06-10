@@ -94,7 +94,7 @@ class PluginStubMixin(BaseStub):
 
     def is_plugin_active(self, plugin_name, stream_id=None,
                          timeout=DEFAULT_TIMEOUT) -> bool:
-        """Returns true if the plugin is active. If a plugin is not marked as
+        """Returns True if the plugin is active. If a plugin is not marked as
         active, it will not run. Like plugin options, this can be configured
         globally and on a per-stream level.
 

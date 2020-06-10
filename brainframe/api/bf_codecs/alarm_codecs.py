@@ -7,18 +7,40 @@ from .condition_codecs import ZoneAlarmCountCondition, ZoneAlarmRateCondition
 class ZoneAlarm(Codec):
     """This is the configuration for an alarm."""
 
-    def __init__(self, *, name, count_conditions, rate_conditions,
-                 use_active_time, active_start_time, active_end_time,
-                 id_=None, zone_id=None, stream_id=None):
-        self.name = name
-        self.id = id_
-        self.zone_id = zone_id
-        self.stream_id = stream_id
+    def __init__(self, *,
+                 name: str,
+                 count_conditions: List[ZoneAlarmCountCondition],
+                 rate_conditions: List[ZoneAlarmRateCondition],
+                 use_active_time: bool,
+                 active_start_time: str,
+                 active_end_time: str,
+                 id_: int = None,
+                 zone_id: int = None,
+                 stream_id: int = None):
+        self.name: str = name
+        """A friendly name for the zone alarm"""
+        self.id: int = id_
+        """A unique identifier"""
+        self.zone_id: int = zone_id
+        """The ID of the zone this alarm is associated with"""
+        self.stream_id: int = stream_id
+        """The ID of the stream the associated zone is in"""
         self.count_conditions: List[ZoneAlarmCountCondition] = count_conditions
+        """All count conditions for this alarm"""
         self.rate_conditions: List[ZoneAlarmRateCondition] = rate_conditions
-        self.use_active_time = use_active_time
-        self.active_start_time = active_start_time
-        self.active_end_time = active_end_time
+        """All rate conditions for this alarm"""
+        self.use_active_time: bool = use_active_time
+        """If True, the alarm will only be triggered when the current time is
+        between the active_start_time and active_end_time.
+        """
+        self.active_start_time: str = active_start_time
+        """The time of day where this alarm starts being active, in the format
+        "hh:mm:ss"
+        """
+        self.active_end_time: str = active_end_time
+        """The time of day where this alarm starts being active, in the format
+        "hh:mm:ss"
+        """
 
     def to_dict(self):
         d = dict(self.__dict__)
@@ -50,8 +72,14 @@ class ZoneAlarm(Codec):
 class Alert(Codec):
     """This is sent when an Alarm has been triggered."""
 
-    def __init__(self, *, alarm_id, zone_id, stream_id, start_time, end_time,
-                 verified_as, id_=None):
+    def __init__(self, *,
+                 alarm_id: int,
+                 zone_id: int,
+                 stream_id: int,
+                 start_time: float,
+                 end_time: float,
+                 verified_as: Optional[bool],
+                 id_: int = None):
         self.id: int = id_
         """A unique identifier"""
         self.alarm_id: int = alarm_id

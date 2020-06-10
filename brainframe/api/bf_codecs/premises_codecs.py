@@ -4,10 +4,10 @@ from .base_codecs import Codec
 class Premises(Codec):
     """Information about a specific Premises"""
 
-    def __init__(self, *, name: str, id_=None):
-        self.id = id_
+    def __init__(self, *, name: str, id_: int = None):
+        self.id: int = id_
         """The unique ID of the premises"""
-        self.name = name
+        self.name: str = name
         """The friendly name of the premises"""
 
     def to_dict(self):

@@ -6,23 +6,27 @@ from .base_codecs import Codec
 class Identity(Codec):
     """A specific, recognizable object or person."""
 
-    def __init__(self, *, unique_name, nickname, metadata=None, id_=None):
-        self.unique_name = unique_name
+    def __init__(self, *,
+                 unique_name: str,
+                 nickname: str,
+                 metadata: dict = None,
+                 id_: int = None):
+        self.unique_name: str = unique_name
         """The unique id of the identified detection.
 
         Not to be confused with the id of the object which is a field used by
         the database.
         """
 
-        self.nickname = nickname
+        self.nickname: str = nickname
         """A display name for the identity which may not be unique, like a
         person's name.
         """
 
-        self.metadata = {} if metadata is None else metadata
+        self.metadata: dict = {} if metadata is None else metadata
         """Any additional user-defined information about the identity."""
 
-        self.id = id_
+        self.id: int = id_
         """A unique identifier."""
 
     def to_dict(self):
@@ -40,25 +44,26 @@ class Identity(Codec):
 class Encoding(Codec):
     """An encoding attached to an identity."""
 
-    def __init__(self, *, identity_id: int,
+    def __init__(self, *,
+                 identity_id: int,
                  class_name: str,
                  from_image: Optional[int],
                  vector: List[int],
-                 id_=None):
-        self.identity_id = identity_id
+                 id_: int = None):
+        self.identity_id: int = identity_id
         """The ID of the identity this encoding is associated with."""
-        self.class_name = class_name
+        self.class_name: str = class_name
         """The class of object this encoding is for."""
-        self.from_image = from_image
+        self.from_image: Optional[int] = from_image
         """The storage ID of the image that this encoding was created from, or
         None if this encoding was not created from an image.
         """
-        self.vector = vector
+        self.vector: List[int] = vector
         """A low-dimensional representation of the object's appearance. This is
         what objects found in streams will be compared to in order to decide if
         the object is of the identity this encoding is associated with.
         """
-        self.id = id_
+        self.id: int = id_
         """The unique ID of the encoding."""
 
     def to_dict(self):

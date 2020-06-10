@@ -51,9 +51,15 @@ class ZoneAlarmCountCondition(Codec):
     of objects in a zone to some number.
     """
 
-    def __init__(self, *, test, check_value, with_class_name, with_attribute,
-                 window_duration, window_threshold, intersection_point,
-                 id_=None):
+    def __init__(self, *,
+                 test: CountConditionTestType,
+                 check_value: int,
+                 with_class_name: str,
+                 with_attribute: Optional[Attribute],
+                 window_duration: float,
+                 window_threshold: float,
+                 intersection_point: IntersectionPointType,
+                 id_: int = None):
         self.test: CountConditionTestType = test
         """The way that the check value will be compared to the actual count
         """
@@ -149,8 +155,15 @@ class ZoneAlarmRateCondition(Codec):
                      DirectionType.EXITING: "exited",
                      DirectionType.ENTERING_OR_EXITING: "entered or exited"}
 
-    def __init__(self, *, test, duration, change, direction, with_class_name,
-                 with_attribute, intersection_point, id_=None):
+    def __init__(self, *,
+                 test: RateConditionTestType,
+                 duration: float,
+                 change: float,
+                 direction: DirectionType,
+                 with_class_name: str,
+                 with_attribute: Optional[Attribute],
+                 intersection_point: IntersectionPointType,
+                 id_: int = None):
         self.test: RateConditionTestType = test
         """The way that the change value will be compared to the actual rate"""
         self.duration: float = duration
