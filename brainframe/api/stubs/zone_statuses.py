@@ -14,18 +14,15 @@ class ZoneStatusStubMixin(BaseStub):
 
     def get_latest_zone_statuses(self,
                                  timeout=DEFAULT_TIMEOUT) -> ZONE_STATUS_TYPE:
-        """Get all ZoneStatuses
-        This method gets ALL of the latest processed zone statuses for every
-        zone for every stream. The call is intentionally broad and large so as
-        to lower the overhead of pinging the server and waiting for a return.
+        """This method gets all of the latest processed zone statuses for every
+        zone and for every stream.
 
         All active streams will have a key in the output dict.
+
         :param timeout: The timeout to use for this request
-        :return:
-        {
-            stream_id1: {"Front Porch": ZoneStatus, "Some Place": ZoneStatus},
-            stream_id2: {"Entrance": ZoneStatus}
-        }
+        :return: A dict whose keys are stream IDs and whose value is another
+            dict. This nested dict's keys are zone names and their value is the
+            ZoneStatus for that zone.
         """
         req = "/api/streams/status"
         data, _ = self._get_json(req, timeout)
@@ -37,6 +34,15 @@ class ZoneStatusStubMixin(BaseStub):
         return out
 
     def get_zone_status_stream(self, timeout=None) -> ZONE_STATUS_STREAM_TYPE:
+        """Streams ZoneStatus results from the server as they are produced.
+
+        All active streams will have a key in the output dict.
+
+        :param timeout: The timeout to use for this request
+        :return: A generator that outputs dicts whose keys are stream IDs and
+            whose value is another dict. This nested dict's keys are zone names
+            and their value is the ZoneStatus for that zone.
+        """
         req = "/api/streams/statuses"
 
         def zone_status_iterator():

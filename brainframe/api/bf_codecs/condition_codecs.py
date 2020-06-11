@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 from .base_codecs import Codec
 from .detection_codecs import Attribute
@@ -13,6 +14,10 @@ condition_test_map = {'>': "Greater than",
 
 
 class CountConditionTestType(Enum):
+    """Defines the way a count condition compares the actual value to the
+    alarm's test value.
+    """
+
     GREATER_THAN = ">"
     LESS_THAN = "<"
     EQUAL_TO = "="
@@ -24,6 +29,12 @@ class CountConditionTestType(Enum):
 
 
 class IntersectionPointType(Enum):
+    """The point on a detection that must be inside a zone for the detection to
+    count as being inside the zone. The most commonly used intersection point
+    is BOTTOM, which counts a detection as being inside a zone if the bottom
+    center point of the detection in the zone.
+    """
+
     BOTTOM = "bottom"
     TOP = "top"
     LEFT = "left"
@@ -40,20 +51,38 @@ class ZoneAlarmCountCondition(Codec):
     of objects in a zone to some number.
     """
 
-    TestType = CountConditionTestType
-    IntersectionPointType = IntersectionPointType
-
-    def __init__(self, *, test, check_value, with_class_name, with_attribute,
-                 window_duration, window_threshold, intersection_point,
-                 id_=None):
-        self.test = test
-        self.check_value = check_value
-        self.with_class_name = with_class_name
-        self.with_attribute = with_attribute
-        self.window_duration = window_duration
-        self.window_threshold = window_threshold
-        self.intersection_point = intersection_point
-        self.id = id_
+    def __init__(self, *,
+                 test: CountConditionTestType,
+                 check_value: int,
+                 with_class_name: str,
+                 with_attribute: Optional[Attribute],
+                 window_duration: float,
+                 window_threshold: float,
+                 intersection_point: IntersectionPointType,
+                 id_: int = None):
+        self.test: CountConditionTestType = test
+        """The way that the check value will be compared to the actual count
+        """
+        self.check_value: int = check_value
+        """The value to test the actual count against"""
+        self.with_class_name: str = with_class_name
+        """The class name of the objects to count"""
+        self.with_attribute: Optional[Attribute] = with_attribute
+        """If provided, only objects that have this attribute value will be
+        counted.
+        """
+        self.window_duration: float = window_duration
+        """The sliding window duration for this condition"""
+        self.window_threshold: float = window_threshold
+        """The portion of time during the sliding window duration that this
+        condition must be true in order for the associated alarm to trigger
+        """
+        self.intersection_point: IntersectionPointType = intersection_point
+        """The point in each detection that must be within the zone in order
+        for that detection to be counted as in that zone
+        """
+        self.id: int = id_
+        """A unique identifier"""
 
     def __repr__(self):
         condition_str = condition_test_map[self.test.value]
@@ -93,6 +122,10 @@ class ZoneAlarmCountCondition(Codec):
 
 
 class RateConditionTestType(Enum):
+    """Defines the way a rate condition compares the actual rate value to the
+    alarm's test value.
+    """
+
     GREATER_THAN_OR_EQUAL_TO = ">="
     LESS_THAN_OR_EQUAL_TO = "<="
 
@@ -102,6 +135,8 @@ class RateConditionTestType(Enum):
 
 
 class DirectionType(Enum):
+    """Defines the direction of flow that a rate condition pertains to."""
+
     ENTERING = "entering"
     EXITING = "exiting"
     ENTERING_OR_EXITING = "entering_or_exiting"
@@ -112,27 +147,43 @@ class DirectionType(Enum):
 
 
 class ZoneAlarmRateCondition(Codec):
-    """A condition that must be met for an alarm to go off. Compares the rate of
-    change in the count of some object against a test value.
+    """A condition that must be met for an alarm to go off. Compares the rate
+    of change in the count of some object against a test value.
     """
-
-    TestType = RateConditionTestType
-    DirectionType = DirectionType
 
     direction_map = {DirectionType.ENTERING: "entered",
                      DirectionType.EXITING: "exited",
                      DirectionType.ENTERING_OR_EXITING: "entered or exited"}
 
-    def __init__(self, *, test, duration, change, direction, with_class_name,
-                 with_attribute, intersection_point, id_=None):
-        self.test = test
-        self.duration = duration
-        self.change = change
-        self.direction = direction
-        self.with_class_name = with_class_name
-        self.with_attribute = with_attribute
-        self.intersection_point = intersection_point
-        self.id = id_
+    def __init__(self, *,
+                 test: RateConditionTestType,
+                 duration: float,
+                 change: float,
+                 direction: DirectionType,
+                 with_class_name: str,
+                 with_attribute: Optional[Attribute],
+                 intersection_point: IntersectionPointType,
+                 id_: int = None):
+        self.test: RateConditionTestType = test
+        """The way that the change value will be compared to the actual rate"""
+        self.duration: float = duration
+        """The time in seconds for this rate change to occur"""
+        self.change: float = change
+        """The rate change value to compare the actual rate value against"""
+        self.direction: DirectionType = direction
+        """The direction of flow this condition tests for"""
+        self.with_class_name: str = with_class_name
+        """The class name of the objects to measure rate of change for"""
+        self.with_attribute: Optional[Attribute] = with_attribute
+        """If provided, only objects that have this attribute will be counted
+        in the rate calculation
+        """
+        self.intersection_point: IntersectionPointType = intersection_point
+        """The point in each detection that must be within the zone in order
+        for that detection to be counted as in that zone
+        """
+        self.id: int = id_
+        """A unique identifier"""
 
     def __repr__(self):
         condition_str = condition_test_map[self.test.value]

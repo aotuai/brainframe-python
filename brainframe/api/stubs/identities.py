@@ -14,6 +14,7 @@ class IdentityStubMixin(BaseStub):
     def get_identity(self, identity_id: int,
                      timeout=DEFAULT_TIMEOUT) -> Identity:
         """Gets the identity with the given ID.
+
         :param identity_id: The ID of the identity to get
         :param timeout: The timeout to use for this request
         :return: Identity

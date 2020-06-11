@@ -79,7 +79,8 @@ class StorageStubMixin(BaseStub):
         return self.new_storage(data, mime_type, timeout=timeout)
 
     def delete_storage(self, storage_id, timeout=DEFAULT_TIMEOUT):
-        """Deletes the storage object with the given ID.
+        """Deletes the storage object with the given ID. Deleting storage
+        objects that are in use, like for an encoding, is not recommended.
 
         :param storage_id: The ID of the storage object to delete
         :param timeout: The timeout to use for this request

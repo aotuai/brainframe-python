@@ -1,24 +1,45 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 import uuid
 
 from .base_codecs import Codec
+from .identity_codecs import Identity
 
 
 class Detection(Codec):
-    """A detected object. It can have 'children', for example, a "person" can
-    have a "face" object as a child. It can also own several Attributes. For
-    example, a "person" can exhibit a behaviour. A Face can have a gender.
+    """An object detected in a video frame. Detections can have attributes
+    attached to them that provide more information about the object as well as
+    other metadata like a unique tracking ID.
     """
 
-    def __init__(self, *, class_name, coords, children, attributes,
-                 with_identity, extra_data, track_id):
+    def __init__(self, *,
+                 class_name: str,
+                 coords: List[List[int]],
+                 children: List["Detection"],
+                 attributes: Dict[str, str],
+                 with_identity: Optional[Identity],
+                 extra_data: Dict[str, Any],
+                 track_id: Optional[uuid.UUID]):
         self.class_name: str = class_name
+        """The class of object that was detected, like 'person' or 'car'"""
         self.coords: List[List[int]] = coords
+        """The coordinates, in pixels, of the detection in the frame"""
         self.children: List[Detection] = children
-        self.attributes: Dict[str: str] = attributes
+        self.attributes: Dict[str, str] = attributes
+        """A dict whose key is an attribute name and whose value is the value
+        of that attribute. For example, a car detection may have an attribute
+        whose key is 'type' and whose value is 'sedan'.
+        """
         self.with_identity: Optional[Identity] = with_identity
-        self.extra_data = extra_data
+        """If not None, this is the identity that this detection was recognized
+        as.
+        """
+        self.extra_data: Dict[str, Any] = extra_data
+        """Any additional metadata describing this object"""
         self.track_id: Optional[uuid.UUID] = track_id
+        """If not None, this is a unique tracking ID for the object. This ID
+        can be compared to detections from other frames to track the movement
+        of an object over time.
+        """
 
     @property
     def center(self):
@@ -71,9 +92,11 @@ class Attribute(Codec):
     on the client side
     """
 
-    def __init__(self, *, category=None, value=None):
-        self.category = category
-        self.value = value
+    def __init__(self, *, category: str = None, value: str = None):
+        self.category: str = category
+        """The category of attribute being described"""
+        self.value: str = value
+        """The value for this attribute category"""
 
     def to_dict(self):
         return self.__dict__
@@ -82,37 +105,3 @@ class Attribute(Codec):
     def from_dict(d):
         return Attribute(category=d["category"],
                          value=d["value"])
-
-
-class Identity(Codec):
-    """A specific, recognizable object or person."""
-
-    def __init__(self, *, unique_name, nickname, metadata=None, id_=None):
-        self.unique_name = unique_name
-        """The unique id of the identified detection.
-        
-        Not to be confused with the id_ field of the object which is a field
-        used by the database.
-        """
-
-        self.nickname = nickname
-        """A display name for the identity which may not be unique, like a
-        person's name.
-        """
-
-        self.metadata = {} if metadata is None else metadata
-        """Any additional user-defined information about the identity."""
-
-        self.id = id_
-        """A unique identifier."""
-
-    def to_dict(self):
-        return self.__dict__
-
-    @staticmethod
-    def from_dict(d):
-        return Identity(
-            id_=d["id"],
-            unique_name=d["unique_name"],
-            nickname=d["nickname"],
-            metadata=d["metadata"])

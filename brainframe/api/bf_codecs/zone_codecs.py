@@ -7,20 +7,36 @@ from .detection_codecs import Detection
 
 
 class Zone(Codec):
-    """The definition for a zone. It is a non-convex polygon or a line.
+    """The definition for a zone. It is a non-convex polygon or a line."""
 
-    :param coords: List of lists (ex: [[0, 0], [10, 10], [100, 500], [0, 500]])
-    points are pixel based, with (0, 0) at top left
-    """
-
-    def __init__(self, *, name, coords, stream_id, alarms=(), id_=None):
-        self.name = name
-        self.id = id_
-        self.stream_id = stream_id
+    def __init__(self, *,
+                 name: str,
+                 coords: List[List[int]],
+                 stream_id: int,
+                 alarms: List[ZoneAlarm] = (),
+                 id_: int = None):
+        self.name: str = name
+        """A friendly name for the zone"""
+        self.id: int = id_
+        """A unique identifier"""
+        self.stream_id: int = stream_id
+        """The ID of the stream this zone is in"""
         self.alarms: List[ZoneAlarm] = list(alarms)
-        self.coords = coords
+        """All alarms that are attached to the zone"""
+        self.coords: List[List[int]] = coords
+        """Coordinates that define the region the zone occupies. It is a list
+        of lists which are two elements in size. The coordinates are in pixels
+        where the top left of the frame is [0, 0].
+        
+        Example: [[0, 0], [10, 10], [100, 500], [0, 500]]
+        """
 
     def get_alarm(self, alarm_id) -> Optional[ZoneAlarm]:
+        """
+        :param alarm_id: The ID of the alarm to search in the alarm list for
+        :return: The alarm with the given ID, or None if no alarm with that ID
+            exists in this zone
+        """
         for alarm in self.alarms:
             if alarm.id == alarm_id:
                 return alarm
@@ -45,21 +61,45 @@ class ZoneStatus(Codec):
     """The current status of everything going on inside a zone.
     """
 
-    def __init__(self, *, zone, tstamp, within, entering, exiting, alerts,
-                 total_entered, total_exited):
+    def __init__(self, *,
+                 zone: Zone,
+                 tstamp: float,
+                 within: List[Detection],
+                 entering: List[Detection],
+                 exiting: List[Detection],
+                 alerts: List[Alert],
+                 total_entered: dict,
+                 total_exited: dict):
         self.zone: Zone = zone
+        """The zone that this status pertains to"""
         self.tstamp: float = tstamp
+        """The time at which this ZoneStatus was created as a Unix timestamp in
+        seconds
+        """
         self.total_entered: dict = total_entered
+        """A dict of key-value pairs indicating how many objects have exited the
+        zone. The key is the class name, and the value is the count.
+        """
         self.total_exited: dict = total_exited
+        """A set of key-value pairs indicating how many objects have exited the
+        zone. The key is the object type, and the value is the count.
+        """
         self.within: List[Detection] = within
+        """A list of all detections within the zone"""
         self.entering: List[Detection] = entering
+        """A list of all detections that entered the zone this frame"""
         self.exiting: List[Detection] = exiting
+        """A list of all detections that have exited the zone this frame"""
         self.alerts: List[Alert] = alerts
+        """A list of all active alerts for the zone at this frame"""
 
     @property
     def detection_within_counts(self) -> dict:
-        """The current count of each class type detected in the video
-        :returns: {'class_name': int count, ...} """
+        """The current count of each class type detected in the video.
+
+        :returns: A dict whose keys are class names and whose values are the
+            count for that class name
+        """
         counter = Counter([det.class_name for det in self.within])
         return counter
 

@@ -2,6 +2,14 @@
 BrainFrame Python API
 =====================
 
+.. image:: https://readthedocs.org/projects/brainframe-python-api/badge/?version=latest
+   :target: https://brainframe-python-api.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
+.. image:: https://github.com/aotuai/brainframe_python/workflows/Publish%20package/badge.svg
+   :target: https://github.com/aotuai/brainframe_python/actions
+   :alt: Publish Packages CI Status
+
 This library is a Python wrapper around the BrainFrame REST API. It allows for
 easy interaction with a BrainFrame server.
 
@@ -34,3 +42,12 @@ you are using.
 .. code-block:: bash
 
    pip3 install brainframe-api==0.26.0
+
+Documentation
+-------------
+
+Documentation for this library is available on `ReadTheDocs`_.
+
+.. _`ReadTheDocs`:
+   https://brainframe-python-api.readthedocs.io/en/latest/
+
