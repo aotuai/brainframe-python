@@ -1,6 +1,8 @@
 from typing import Optional
 from enum import Enum
 
+from dataclasses import dataclass
+
 from .base_codecs import Codec
 
 
@@ -19,25 +21,24 @@ class RoleType(Enum):
         return [v.value for v in cls]
 
 
+@dataclass
 class User(Codec):
     """Contains information on a user."""
 
-    def __init__(self, *,
-                 username: str,
-                 password: Optional[str],
-                 role: RoleType,
-                 id_: int = None):
-        self.username: str = username
-        """The username used for login"""
-        self.password: Optional[str] = password
-        """This field will be None when retrieving users from the server. It
-        should only be set by the client when creating a new user or updating a
-        user's password.
-        """
-        self.role: RoleType = role
-        """The user's role"""
-        self.id: int = id_
-        """The user's unique ID"""
+    username: str
+    """The username used for login"""
+
+    password: Optional[str]
+    """This field will be None when retrieving users from the server. It
+    should only be set by the client when creating a new user or updating a
+    user's password.
+    """
+
+    role: RoleType
+    """The user's role"""
+
+    id: Optional[int] = None
+    """The user's unique ID"""
 
     def to_dict(self) -> dict:
         d = dict(self.__dict__)
@@ -50,5 +51,5 @@ class User(Codec):
             username=d["username"],
             password=d["password"],
             role=User.RoleType(d["role"]),
-            id_=d["id"],
+            id=d["id"],
         )

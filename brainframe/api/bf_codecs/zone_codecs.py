@@ -1,35 +1,36 @@
 from collections import Counter
 from typing import List, Optional
 
+from dataclasses import dataclass, field
+
 from .base_codecs import Codec
 from .alarm_codecs import Alert, ZoneAlarm
 from .detection_codecs import Detection
 
 
+@dataclass
 class Zone(Codec):
     """The definition for a zone. It is a non-convex polygon or a line."""
 
-    def __init__(self, *,
-                 name: str,
-                 coords: List[List[int]],
-                 stream_id: int,
-                 alarms: List[ZoneAlarm] = (),
-                 id_: int = None):
-        self.name: str = name
-        """A friendly name for the zone"""
-        self.id: int = id_
-        """A unique identifier"""
-        self.stream_id: int = stream_id
-        """The ID of the stream this zone is in"""
-        self.alarms: List[ZoneAlarm] = list(alarms)
-        """All alarms that are attached to the zone"""
-        self.coords: List[List[int]] = coords
-        """Coordinates that define the region the zone occupies. It is a list
-        of lists which are two elements in size. The coordinates are in pixels
-        where the top left of the frame is [0, 0].
-        
-        Example: [[0, 0], [10, 10], [100, 500], [0, 500]]
-        """
+    name: str
+    """A friendly name for the zone"""
+
+    stream_id: int
+    """The ID of the stream this zone is in"""
+
+    coords: List[List[int]]
+    """Coordinates that define the region the zone occupies. It is a list
+    of lists which are two elements in size. The coordinates are in pixels
+    where the top left of the frame is [0, 0].
+    
+    Example: [[0, 0], [10, 10], [100, 500], [0, 500]]
+    """
+
+    alarms: List[ZoneAlarm] = field(default=list)
+    """All alarms that are attached to the zone"""
+
+    id: Optional[int] = None
+    """A unique identifier"""
 
     def get_alarm(self, alarm_id) -> Optional[ZoneAlarm]:
         """
@@ -51,47 +52,46 @@ class Zone(Codec):
     def from_dict(d):
         alarms = [ZoneAlarm.from_dict(alarm_d) for alarm_d in d["alarms"]]
         return Zone(name=d["name"],
-                    id_=d["id"],
+                    id=d["id"],
                     alarms=alarms,
                     stream_id=d["stream_id"],
                     coords=d["coords"])
 
 
+@dataclass
 class ZoneStatus(Codec):
     """The current status of everything going on inside a zone.
     """
 
-    def __init__(self, *,
-                 zone: Zone,
-                 tstamp: float,
-                 within: List[Detection],
-                 entering: List[Detection],
-                 exiting: List[Detection],
-                 alerts: List[Alert],
-                 total_entered: dict,
-                 total_exited: dict):
-        self.zone: Zone = zone
-        """The zone that this status pertains to"""
-        self.tstamp: float = tstamp
-        """The time at which this ZoneStatus was created as a Unix timestamp in
-        seconds
-        """
-        self.total_entered: dict = total_entered
-        """A dict of key-value pairs indicating how many objects have exited the
-        zone. The key is the class name, and the value is the count.
-        """
-        self.total_exited: dict = total_exited
-        """A set of key-value pairs indicating how many objects have exited the
-        zone. The key is the object type, and the value is the count.
-        """
-        self.within: List[Detection] = within
-        """A list of all detections within the zone"""
-        self.entering: List[Detection] = entering
-        """A list of all detections that entered the zone this frame"""
-        self.exiting: List[Detection] = exiting
-        """A list of all detections that have exited the zone this frame"""
-        self.alerts: List[Alert] = alerts
-        """A list of all active alerts for the zone at this frame"""
+    zone: Zone
+    """The zone that this status pertains to"""
+
+    tstamp: float
+    """The time at which this ZoneStatus was created as a Unix timestamp in
+    seconds
+    """
+
+    total_entered: dict
+    """A dict of key-value pairs indicating how many objects have exited the
+    zone. The key is the class name, and the value is the count.
+    """
+
+    total_exited: dict
+    """A set of key-value pairs indicating how many objects have exited the
+    zone. The key is the object type, and the value is the count.
+    """
+
+    within: List[Detection]
+    """A list of all detections within the zone"""
+
+    entering: List[Detection]
+    """A list of all detections that entered the zone this frame"""
+
+    exiting: List[Detection]
+    """A list of all detections that have exited the zone this frame"""
+
+    alerts: List[Alert]
+    """A list of all active alerts for the zone at this frame"""
 
     @property
     def detection_within_counts(self) -> dict:
