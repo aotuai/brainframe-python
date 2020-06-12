@@ -149,7 +149,7 @@ class NodeDescription(Codec):
 
     @staticmethod
     def from_dict(d):
-        size = NodeDescription.SizeType(d["size"])
+        size = SizeType(d["size"])
         return NodeDescription(
             size=size,
             detections=d["detections"],

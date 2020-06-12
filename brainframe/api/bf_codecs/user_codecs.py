@@ -49,6 +49,6 @@ class User(Codec):
         return User(
             username=d["username"],
             password=d["password"],
-            role=User.RoleType(d["role"]),
+            role=RoleType(d["role"]),
             id_=d["id"],
         )

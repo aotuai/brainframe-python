@@ -114,4 +114,3 @@ class Alert(Codec):
                      start_time=d["start_time"],
                      end_time=d["end_time"],
                      verified_as=d["verified_as"])
-
