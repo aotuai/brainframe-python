@@ -1,45 +1,45 @@
 from typing import Optional, List, Dict, Any
 import uuid
 
+from dataclasses import dataclass
+
 from .base_codecs import Codec
 from .identity_codecs import Identity
 
 
+@dataclass
 class Detection(Codec):
     """An object detected in a video frame. Detections can have attributes
     attached to them that provide more information about the object as well as
     other metadata like a unique tracking ID.
     """
 
-    def __init__(self, *,
-                 class_name: str,
-                 coords: List[List[int]],
-                 children: List["Detection"],
-                 attributes: Dict[str, str],
-                 with_identity: Optional[Identity],
-                 extra_data: Dict[str, Any],
-                 track_id: Optional[uuid.UUID]):
-        self.class_name: str = class_name
-        """The class of object that was detected, like 'person' or 'car'"""
-        self.coords: List[List[int]] = coords
-        """The coordinates, in pixels, of the detection in the frame"""
-        self.children: List[Detection] = children
-        self.attributes: Dict[str, str] = attributes
-        """A dict whose key is an attribute name and whose value is the value
-        of that attribute. For example, a car detection may have an attribute
-        whose key is 'type' and whose value is 'sedan'.
-        """
-        self.with_identity: Optional[Identity] = with_identity
-        """If not None, this is the identity that this detection was recognized
-        as.
-        """
-        self.extra_data: Dict[str, Any] = extra_data
-        """Any additional metadata describing this object"""
-        self.track_id: Optional[uuid.UUID] = track_id
-        """If not None, this is a unique tracking ID for the object. This ID
-        can be compared to detections from other frames to track the movement
-        of an object over time.
-        """
+    class_name: str
+    """The class of object that was detected, like 'person' or 'car'"""
+
+    coords: List[List[int]]
+    """The coordinates, in pixels, of the detection in the frame"""
+
+    children: List["Detection"]
+
+    attributes: Dict[str, str]
+    """A dict whose key is an attribute name and whose value is the value
+    of that attribute. For example, a car detection may have an attribute
+    whose key is 'type' and whose value is 'sedan'.
+    """
+
+    with_identity: Optional[Identity]
+    """If not None, this is the identity that this detection was recognized as.
+    """
+
+    extra_data: Dict[str, Any]
+    """Any additional metadata describing this object"""
+
+    track_id: Optional[uuid.UUID]
+    """If not None, this is a unique tracking ID for the object. This ID
+    can be compared to detections from other frames to track the movement
+    of an object over time.
+    """
 
     @property
     def center(self):
@@ -87,16 +87,17 @@ class Detection(Codec):
                          track_id=track_id)
 
 
+@dataclass
 class Attribute(Codec):
     """This holds an attribute of a detection. These should _not_ be made
     on the client side
     """
 
-    def __init__(self, *, category: str = None, value: str = None):
-        self.category: str = category
-        """The category of attribute being described"""
-        self.value: str = value
-        """The value for this attribute category"""
+    category: str
+    """The category of attribute being described"""
+
+    value: str
+    """The value for this attribute category"""
 
     def to_dict(self):
         return self.__dict__
