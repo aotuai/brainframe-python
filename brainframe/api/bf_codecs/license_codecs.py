@@ -90,7 +90,7 @@ class LicenseInfo(Codec):
             terms = LicenseTerms.from_dict(d["terms"])
 
         return LicenseInfo(
-            state=LicenseInfo.State(d["state"]),
+            state=LicenseState(d["state"]),
             terms=terms,
         )
 

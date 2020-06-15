@@ -109,7 +109,7 @@ class ZoneAlarmCountCondition(Codec):
         with_attribute = None
         if d["with_attribute"] is not None:
             with_attribute = Attribute.from_dict(d["with_attribute"])
-        test = ZoneAlarmCountCondition.TestType(d["test"])
+        test = CountConditionTestType(d["test"])
 
         return ZoneAlarmCountCondition(
             test=test,
@@ -210,13 +210,13 @@ class ZoneAlarmRateCondition(Codec):
         with_attribute = None
         if d["with_attribute"] is not None:
             with_attribute = Attribute.from_dict(d["with_attribute"])
-        test = ZoneAlarmRateCondition.TestType(d["test"])
+        test = RateConditionTestType(d["test"])
 
         return ZoneAlarmRateCondition(
             test=test,
             duration=d["duration"],
             change=d["change"],
-            direction=ZoneAlarmRateCondition.DirectionType(d["direction"]),
+            direction=DirectionType(d["direction"]),
             with_class_name=d["with_class_name"],
             with_attribute=with_attribute,
             intersection_point=intersection_point,

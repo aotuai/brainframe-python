@@ -3,7 +3,8 @@ from time import sleep, time
 
 from requests.exceptions import ConnectionError, ReadTimeout
 
-from brainframe.api.bf_errors import UnauthorizedError, UnknownError
+from .bf_errors import UnauthorizedError, UnknownError
+from .bf_codecs import LicenseState
 from . import stubs
 from .stubs.base_stub import DEFAULT_TIMEOUT
 
@@ -62,7 +63,7 @@ class BrainFrameAPI(stubs.AlertStubMixin,
                 # TODO: Remove this check and let the user know about the
                 #       license not being valid
                 license_info = self.get_license_info()
-                if license_info.state is license_info.State.VALID:
+                if license_info.state is LicenseState.VALID:
                     break
             except (ConnectionError, ConnectionRefusedError,
                     UnauthorizedError, ReadTimeout):

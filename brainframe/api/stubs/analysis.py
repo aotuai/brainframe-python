@@ -39,4 +39,3 @@ class AnalysisStubMixin(BaseStub):
         req = f"/api/streams/{stream_id}/analyze"
         resp, _ = self._get_json(req, timeout)
         return resp
-
