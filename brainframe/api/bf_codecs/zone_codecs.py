@@ -26,7 +26,7 @@ class Zone(Codec):
     Example: [[0, 0], [10, 10], [100, 500], [0, 500]]
     """
 
-    alarms: List[ZoneAlarm] = field(default=list)
+    alarms: List[ZoneAlarm] = field(default_factory=list)
     """All alarms that are attached to the zone"""
 
     id: Optional[int] = None
