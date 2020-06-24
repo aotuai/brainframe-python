@@ -26,5 +26,6 @@ setup(
         "requests==2.*",
         "pillow==6.*",
         "numpy==1.*",
+        "dataclasses==0.*",
     ],
 )

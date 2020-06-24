@@ -20,16 +20,6 @@ class Codec(abc.ABC):
     def from_json(cls, j: str):
         return cls.from_dict(json.loads(j))
 
-    def __repr__(self):
-        """Formats a string in the format of
-        ClassName(arg1=val, arg2=val, arg3=val)"""
-        argstring = ""
-        for argname, argval in self.to_dict().items():
-            if len(argstring):
-                argstring += ", "
-            argstring += f"{argname}={argval}"
-        return f"{type(self).__name__}({argstring})"
-
     def __eq__(self, other):
         if type(other) is dict:
             return self.to_dict() == other

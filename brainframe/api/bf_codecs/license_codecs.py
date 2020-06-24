@@ -2,33 +2,34 @@ from datetime import date, datetime
 from typing import Optional
 from enum import Enum
 
+from dataclasses import dataclass
+
 from .base_codecs import Codec
 
 
+@dataclass
 class LicenseTerms(Codec):
     """The terms of the currently active license."""
 
-    def __init__(self, *,
-                 online_checkin: bool,
-                 max_streams: int,
-                 journal_max_allowed_age: float,
-                 expiration_date: Optional[date]):
-        self.online_checkin: bool = online_checkin
-        """If True, the server will check in with a remote licensing server to
-        verify license terms.
-        """
-        self.max_streams: int = max_streams
-        """The maximum number of streams that may have analysis enabled at any
-        given time.
-        """
-        self.journal_max_allowed_age: float = journal_max_allowed_age
-        """The maximum amount of time in seconds that the server may hold data
-        in the journal for.
-        """
-        self.expiration_date: Optional[date] = expiration_date
-        """The date that this license expires, or None if the license is
-        perpetual.
-        """
+    online_checkin: bool
+    """If True, the server will check in with a remote licensing server to
+    verify license terms.
+    """
+
+    max_streams: int
+    """The maximum number of streams that may have analysis enabled at any
+    given time.
+    """
+
+    journal_max_allowed_age: float
+    """The maximum amount of time in seconds that the server may hold data
+    in the journal for.
+    """
+
+    expiration_date: Optional[date]
+    """The date that this license expires, or None if the license is
+    perpetual.
+    """
 
     def to_dict(self) -> dict:
         d = dict(self.__dict__)
@@ -64,16 +65,17 @@ class LicenseState(Enum):
     """No license was provided"""
 
 
+@dataclass
 class LicenseInfo(Codec):
     """Information on the licensing status of the server"""
 
-    def __init__(self, *, state: LicenseState, terms: Optional[LicenseTerms]):
-        self.state: LicenseState = state
-        """The licensing state of the server."""
-        self.terms: Optional[LicenseTerms] = terms
-        """The active license terms of the server, or None if no license is
-        loaded.
-        """
+    state: LicenseState
+    """The licensing state of the server."""
+
+    terms: Optional[LicenseTerms]
+    """The active license terms of the server, or None if no license is
+    loaded.
+    """
 
     def to_dict(self) -> dict:
         return {
