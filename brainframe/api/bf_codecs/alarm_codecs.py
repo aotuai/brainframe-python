@@ -13,12 +13,6 @@ class ZoneAlarm(Codec):
     name: str
     """A friendly name for the zone alarm"""
 
-    zone_id: int
-    """The ID of the zone this alarm is associated with"""
-
-    stream_id: int
-    """The ID of the stream the associated zone is in"""
-
     count_conditions: List[ZoneAlarmCountCondition]
     """All count conditions for this alarm"""
 
@@ -42,6 +36,12 @@ class ZoneAlarm(Codec):
 
     id: Optional[int] = None
     """A unique identifier"""
+
+    zone_id: Optional[int] = None
+    """The ID of the zone this alarm is associated with"""
+
+    stream_id: Optional[int] = None
+    """The ID of the stream the associated zone is in"""
 
     def to_dict(self):
         d = dict(self.__dict__)
