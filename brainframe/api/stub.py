@@ -46,11 +46,11 @@ class BrainFrameAPI(stubs.AlertStubMixin,
         resp, _ = self._get_json(req, timeout)
         return resp
 
-    def wait_for_server_initialization(self, timeout: int = None):
+    def wait_for_server_initialization(self, timeout: float = None):
         """Waits for the server to be ready to handle requests.
 
-        :param timeout: The maximum amount of time to wait for the server to
-            start. If None, this method will wait indefinitely.
+        :param timeout: The maximum amount of time, in seconds, to wait for the
+            server to start. If None, this method will wait indefinitely.
         """
         start_time = time()
         while True:
@@ -60,11 +60,6 @@ class BrainFrameAPI(stubs.AlertStubMixin,
             try:
                 # Test connection to server
                 self.version()
-                # TODO: Remove this check and let the user know about the
-                #       license not being valid
-                license_info = self.get_license_info()
-                if license_info.state is LicenseState.VALID:
-                    break
             except (ConnectionError, ConnectionRefusedError,
                     UnauthorizedError, ReadTimeout):
                 # Server not started yet or there is a communication
@@ -73,6 +68,8 @@ class BrainFrameAPI(stubs.AlertStubMixin,
             except UnknownError as exc:
                 if exc.status_code not in [502]:
                     raise
+            else:
+                break
 
             # Prevent busy loop
             sleep(.1)
