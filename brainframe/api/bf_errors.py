@@ -283,3 +283,10 @@ class LicenseExpiredError(BaseAPIError):
 class LicenseInvalidError(BaseAPIError):
     """There was an attempt to upload a license that is in an invalid format.
     """
+
+
+@_register_error()
+class RemoteConnectionError(BaseAPIError):
+    """The server encountered an error while connecting to a remote resource
+    that is required for the requested operation.
+    """
