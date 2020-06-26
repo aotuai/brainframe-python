@@ -6,23 +6,22 @@ from dataclasses import dataclass, field
 from .base_codecs import Codec
 
 
-class ConnType(Enum):
-    IP_CAMERA = "ip_camera"
-    """A network camera that uses RTSP or HTTP"""
-    WEBCAM = "webcam"
-    """A webcam (usually USB)"""
-    FILE = "file"
-    """An uploaded video file"""
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
-
-
 @dataclass
 class StreamConfiguration(Codec):
     """Describes a video stream that BrainFrame may connect to and analyze.
     """
+
+    class ConnType(Enum):
+        IP_CAMERA = "ip_camera"
+        """A network camera that uses RTSP or HTTP"""
+        WEBCAM = "webcam"
+        """A webcam (usually USB)"""
+        FILE = "file"
+        """An uploaded video file"""
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
 
     name: str
     """The human-readable name of the video stream"""
@@ -78,7 +77,7 @@ class StreamConfiguration(Codec):
 
     @staticmethod
     def from_dict(d):
-        connection_t = ConnType(d["connection_type"])
+        connection_t = StreamConfiguration.ConnType(d["connection_type"])
         return StreamConfiguration(name=d["name"],
                                    id=d["id"],
                                    connection_type=connection_t,

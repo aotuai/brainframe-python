@@ -175,8 +175,8 @@ class TooManyDetectionsInImageError(BaseAPIError):
 
 @_register_error()
 class ImageAlreadyEncodedError(BaseAPIError):
-    """There was an attempt to encode an image that has already been encoded for
-    a given identity and a given class.
+    """There was an attempt to encode an image that has already been encoded
+    for a given identity and a given class.
     """
 
 

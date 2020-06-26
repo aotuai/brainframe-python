@@ -1,22 +1,9 @@
-from typing import Dict, List, Any
 from enum import Enum
+from typing import Dict, List, Any
 
 from dataclasses import dataclass
 
 from .base_codecs import Codec
-
-
-class OptionType(Enum):
-    """The data type of a plugin option"""
-
-    FLOAT = "float"
-    INT = "int"
-    ENUM = "enum"
-    BOOL = "bool"
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
 
 
 @dataclass
@@ -29,7 +16,19 @@ class PluginOption(Codec):
     streams, but are overridden by stream plugin options.
     """
 
-    type: OptionType
+    class Type(Enum):
+        """The data type of a plugin option"""
+
+        FLOAT = "float"
+        INT = "int"
+        ENUM = "enum"
+        BOOL = "bool"
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
+
+    type: Type
     """The data type of this option's value"""
 
     default: Any
@@ -67,41 +66,11 @@ class PluginOption(Codec):
 
     @staticmethod
     def from_dict(d):
-        type_ = OptionType(d["type"])
+        type_ = PluginOption.Type(d["type"])
         return PluginOption(type=type_,
                             default=d["default"],
                             constraints=d["constraints"],
                             description=d["description"])
-
-
-class SizeType(Enum):
-    """Describes the amount of DetectionNodes a plugin takes as input or
-    provides as output.
-    """
-
-    NONE = "none"
-    """Input: The plugin takes nothing as input, like for an object detector.
-    
-    Output: Plugins cannot have a NONE output.
-    """
-    SINGLE = "single"
-    """Input: The plugin takes a single DetectionNode as input, like for a
-    classifier.
-    
-    Output: The plugin provides a single modified DetectionNode as output, like
-    for a classifier.
-    """
-    ALL = "all"
-    """Input: The plugin takes all instances of a class as input, like for a
-    tracker.
-    
-    Output: The plugin provides all instances of a class as output, like for a
-    detector.
-    """
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
 
 
 @dataclass
@@ -110,7 +79,37 @@ class NodeDescription(Codec):
     of inputs and outputs a plugin uses.
     """
 
-    size: SizeType
+    class Size(Enum):
+        """Describes the amount of DetectionNodes a plugin takes as input or
+        provides as output.
+        """
+
+        NONE = "none"
+        """Input: The plugin takes nothing as input, like for an object
+        detector.
+
+        Output: Plugins cannot have a NONE output.
+        """
+        SINGLE = "single"
+        """Input: The plugin takes a single DetectionNode as input, like for a
+        classifier.
+
+        Output: The plugin provides a single modified DetectionNode as output,
+        like for a classifier.
+        """
+        ALL = "all"
+        """Input: The plugin takes all instances of a class as input, like for
+        a tracker.
+
+        Output: The plugin provides all instances of a class as output, like
+        for a detector.
+        """
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
+
+    size: Size
     """Describes the amount of DetectionNodes the node either takes in as
     input or provides as output
     """
@@ -149,7 +148,7 @@ class NodeDescription(Codec):
 
     @staticmethod
     def from_dict(d):
-        size = SizeType(d["size"])
+        size = NodeDescription.Size(d["size"])
         return NodeDescription(
             size=size,
             detections=d["detections"],
