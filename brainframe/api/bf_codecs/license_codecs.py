@@ -54,22 +54,21 @@ class LicenseTerms(Codec):
         return terms
 
 
-class LicenseState(Enum):
-    VALID = "valid"
-    """A valid license is loaded, features should be enabled"""
-    INVALID = "invalid"
-    """A license was provided, but did not pass validation"""
-    EXPIRED = "expired"
-    """A license was provided, but it has expired"""
-    MISSING = "missing"
-    """No license was provided"""
-
-
 @dataclass
 class LicenseInfo(Codec):
     """Information on the licensing status of the server"""
 
-    state: LicenseState
+    class State(Enum):
+        VALID = "valid"
+        """A valid license is loaded, features should be enabled"""
+        INVALID = "invalid"
+        """A license was provided, but did not pass validation"""
+        EXPIRED = "expired"
+        """A license was provided, but it has expired"""
+        MISSING = "missing"
+        """No license was provided"""
+
+    state: State
     """The licensing state of the server."""
 
     terms: Optional[LicenseTerms]
@@ -90,7 +89,7 @@ class LicenseInfo(Codec):
             terms = LicenseTerms.from_dict(d["terms"])
 
         return LicenseInfo(
-            state=LicenseState(d["state"]),
+            state=LicenseInfo.State(d["state"]),
             terms=terms,
         )
 

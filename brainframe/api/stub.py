@@ -4,7 +4,6 @@ from time import sleep, time
 from requests.exceptions import ConnectionError, ReadTimeout
 
 from .bf_errors import UnauthorizedError, UnknownError
-from .bf_codecs import LicenseState
 from . import stubs
 from .stubs.base_stub import DEFAULT_TIMEOUT
 

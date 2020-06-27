@@ -15,21 +15,6 @@ condition_test_map = {'>': "Greater than",
                       "!=": "Not Equal To"}
 
 
-class CountConditionTestType(Enum):
-    """Defines the way a count condition compares the actual value to the
-    alarm's test value.
-    """
-
-    GREATER_THAN = ">"
-    LESS_THAN = "<"
-    EQUAL_TO = "="
-    NOT_EQUAL_TO = "!="
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
-
-
 class IntersectionPointType(Enum):
     """The point on a detection that must be inside a zone for the detection to
     count as being inside the zone. The most commonly used intersection point
@@ -54,7 +39,21 @@ class ZoneAlarmCountCondition(Codec):
     of objects in a zone to some number.
     """
 
-    test: CountConditionTestType
+    class TestType(Enum):
+        """Defines the way a count condition compares the actual value to the
+        alarm's test value.
+        """
+
+        GREATER_THAN = ">"
+        LESS_THAN = "<"
+        EQUAL_TO = "="
+        NOT_EQUAL_TO = "!="
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
+
+    test: TestType
     """The way that the check value will be compared to the actual count
     """
 
@@ -109,7 +108,7 @@ class ZoneAlarmCountCondition(Codec):
         with_attribute = None
         if d["with_attribute"] is not None:
             with_attribute = Attribute.from_dict(d["with_attribute"])
-        test = CountConditionTestType(d["test"])
+        test = ZoneAlarmCountCondition.TestType(d["test"])
 
         return ZoneAlarmCountCondition(
             test=test,
@@ -122,42 +121,40 @@ class ZoneAlarmCountCondition(Codec):
             id=d["id"])
 
 
-class RateConditionTestType(Enum):
-    """Defines the way a rate condition compares the actual rate value to the
-    alarm's test value.
-    """
-
-    GREATER_THAN_OR_EQUAL_TO = ">="
-    LESS_THAN_OR_EQUAL_TO = "<="
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
-
-
-class DirectionType(Enum):
-    """Defines the direction of flow that a rate condition pertains to."""
-
-    ENTERING = "entering"
-    EXITING = "exiting"
-    ENTERING_OR_EXITING = "entering_or_exiting"
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
-
-
 @dataclass
 class ZoneAlarmRateCondition(Codec):
     """A condition that must be met for an alarm to go off. Compares the rate
     of change in the count of some object against a test value.
     """
 
+    class TestType(Enum):
+        """Defines the way a rate condition compares the actual rate value to
+        the alarm's test value.
+        """
+
+        GREATER_THAN_OR_EQUAL_TO = ">="
+        LESS_THAN_OR_EQUAL_TO = "<="
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
+
+    class DirectionType(Enum):
+        """Defines the direction of flow that a rate condition pertains to."""
+
+        ENTERING = "entering"
+        EXITING = "exiting"
+        ENTERING_OR_EXITING = "entering_or_exiting"
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
+
     _direction_map = {DirectionType.ENTERING: "entered",
                       DirectionType.EXITING: "exited",
                       DirectionType.ENTERING_OR_EXITING: "entered or exited"}
 
-    test: RateConditionTestType
+    test: TestType
     """The way that the change value will be compared to the actual rate"""
 
     duration: float
@@ -210,13 +207,13 @@ class ZoneAlarmRateCondition(Codec):
         with_attribute = None
         if d["with_attribute"] is not None:
             with_attribute = Attribute.from_dict(d["with_attribute"])
-        test = RateConditionTestType(d["test"])
+        test = ZoneAlarmRateCondition.TestType(d["test"])
 
         return ZoneAlarmRateCondition(
             test=test,
             duration=d["duration"],
             change=d["change"],
-            direction=DirectionType(d["direction"]),
+            direction=ZoneAlarmRateCondition.DirectionType(d["direction"]),
             with_class_name=d["with_class_name"],
             with_attribute=with_attribute,
             intersection_point=intersection_point,

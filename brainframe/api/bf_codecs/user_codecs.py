@@ -6,24 +6,23 @@ from dataclasses import dataclass
 from .base_codecs import Codec
 
 
-class RoleType(Enum):
-    """Controls the level of access a user has to API endpoints."""
-
-    EDITOR = "editor"
-    """A user that can access most endpoints but cannot do administrative tasks
-    like adding users and managing the license.
-    """
-    ADMIN = "admin"
-    """A user that can access all endpoints."""
-
-    @classmethod
-    def values(cls):
-        return [v.value for v in cls]
-
-
 @dataclass
 class User(Codec):
     """Contains information on a user."""
+
+    class Role(Enum):
+        """Controls the level of access a user has to API endpoints."""
+
+        EDITOR = "editor"
+        """A user that can access most endpoints but cannot do administrative
+        tasks like adding users and managing the license.
+        """
+        ADMIN = "admin"
+        """A user that can access all endpoints."""
+
+        @classmethod
+        def values(cls):
+            return [v.value for v in cls]
 
     username: str
     """The username used for login"""
@@ -34,7 +33,7 @@ class User(Codec):
     user's password.
     """
 
-    role: RoleType
+    role: Role
     """The user's role"""
 
     id: Optional[int] = None
@@ -50,6 +49,6 @@ class User(Codec):
         return User(
             username=d["username"],
             password=d["password"],
-            role=RoleType(d["role"]),
+            role=User.Role(d["role"]),
             id=d["id"],
         )
