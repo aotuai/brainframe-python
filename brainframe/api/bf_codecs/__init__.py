@@ -10,9 +10,9 @@ from .config_codecs import StreamConfiguration
 from .identity_codecs import Identity, Encoding
 from .detection_codecs import Attribute, Detection
 from .zone_codecs import Zone, ZoneStatus
-from .plugin_codecs import (
-    PluginOption,
-    Plugin,
+from .capsule_codecs import (
+    CapsuleOption,
+    Capsule,
     NodeDescription,
 )
 from .premises_codecs import Premises

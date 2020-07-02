@@ -9,24 +9,24 @@ information.
 API Methods
 -----------
 
-.. automethod:: brainframe.api.BrainFrameAPI.get_plugin
+.. automethod:: brainframe.api.BrainFrameAPI.get_capsule
 
-.. automethod:: brainframe.api.BrainFrameAPI.get_plugins
+.. automethod:: brainframe.api.BrainFrameAPI.get_capsules
 
-.. automethod:: brainframe.api.BrainFrameAPI.get_plugin_option_vals
+.. automethod:: brainframe.api.BrainFrameAPI.get_capsule_option_vals
 
-.. automethod:: brainframe.api.BrainFrameAPI.set_plugin_option_vals
+.. automethod:: brainframe.api.BrainFrameAPI.set_capsule_option_vals
 
-.. automethod:: brainframe.api.BrainFrameAPI.patch_plugin_option_vals
+.. automethod:: brainframe.api.BrainFrameAPI.patch_capsule_option_vals
 
-.. automethod:: brainframe.api.BrainFrameAPI.is_plugin_active
+.. automethod:: brainframe.api.BrainFrameAPI.is_capsule_active
 
-.. automethod:: brainframe.api.BrainFrameAPI.set_plugin_active
+.. automethod:: brainframe.api.BrainFrameAPI.set_capsule_active
 
 Data Structures
 ---------------
 
-.. automodule:: brainframe.api.bf_codecs.plugin_codecs
+.. automodule:: brainframe.api.bf_codecs.capsule_codecs
    :members:
 
 .. _`Introduction to Capsules`:
