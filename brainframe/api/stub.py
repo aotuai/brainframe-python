@@ -11,7 +11,7 @@ from .stubs.base_stub import DEFAULT_TIMEOUT
 class BrainFrameAPI(stubs.AlertStubMixin,
                     stubs.AnalysisStubMixin,
                     stubs.IdentityStubMixin,
-                    stubs.PluginStubMixin,
+                    stubs.CapsuleStubMixin,
                     stubs.StreamStubMixin,
                     stubs.ZoneStatusStubMixin,
                     stubs.ZoneStubMixin,

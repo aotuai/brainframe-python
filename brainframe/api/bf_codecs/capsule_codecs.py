@@ -7,17 +7,17 @@ from .base_codecs import Codec
 
 
 @dataclass
-class PluginOption(Codec):
-    """A single configuration option for a plugin. Defines what type of option
+class CapsuleOption(Codec):
+    """A single configuration option for a capsule. Defines what type of option
     it is and its potential values.
 
-    There are two kinds of plugin options. Stream plugin options apply only to
-    the stream they are attached to. Global plugin options apply to all
-    streams, but are overridden by stream plugin options.
+    There are two kinds of capsule options. Stream capsule options apply only
+    to the stream they are attached to. Global capsule options apply to all
+    streams, but are overridden by stream capsule options.
     """
 
     class Type(Enum):
-        """The data type of a plugin option"""
+        """The data type of a capsule option"""
 
         FLOAT = "float"
         INT = "int"
@@ -57,7 +57,7 @@ class PluginOption(Codec):
     """
 
     description: str
-    """A human-readable description of the plugin's capabilities"""
+    """A human-readable description of the capsule's capabilities"""
 
     def to_dict(self):
         d = dict(self.__dict__)
@@ -66,42 +66,42 @@ class PluginOption(Codec):
 
     @staticmethod
     def from_dict(d):
-        type_ = PluginOption.Type(d["type"])
-        return PluginOption(type=type_,
-                            default=d["default"],
-                            constraints=d["constraints"],
-                            description=d["description"])
+        type_ = CapsuleOption.Type(d["type"])
+        return CapsuleOption(type=type_,
+                             default=d["default"],
+                             constraints=d["constraints"],
+                             description=d["description"])
 
 
 @dataclass
 class NodeDescription(Codec):
-    """A description of a DetectionNode, used by plugins to define what kinds
-    of inputs and outputs a plugin uses.
+    """A description of a DetectionNode, used by capsules to define what kinds
+    of inputs and outputs a capsule uses.
     """
 
     class Size(Enum):
-        """Describes the amount of DetectionNodes a plugin takes as input or
+        """Describes the amount of DetectionNodes a capsule takes as input or
         provides as output.
         """
 
         NONE = "none"
-        """Input: The plugin takes nothing as input, like for an object
+        """Input: The capsule takes nothing as input, like for an object
         detector.
 
-        Output: Plugins cannot have a NONE output.
+        Output: Capsules cannot have a NONE output.
         """
         SINGLE = "single"
-        """Input: The plugin takes a single DetectionNode as input, like for a
+        """Input: The capsule takes a single DetectionNode as input, like for a
         classifier.
 
-        Output: The plugin provides a single modified DetectionNode as output,
+        Output: The capsule provides a single modified DetectionNode as output,
         like for a classifier.
         """
         ALL = "all"
-        """Input: The plugin takes all instances of a class as input, like for
+        """Input: The capsule takes all instances of a class as input, like for
         a tracker.
 
-        Output: The plugin provides all instances of a class as output, like
+        Output: The capsule provides all instances of a class as output, like
         for a detector.
         """
 
@@ -159,34 +159,34 @@ class NodeDescription(Codec):
 
 
 @dataclass
-class Plugin(Codec):
-    """Metadata on a loaded plugin."""
+class Capsule(Codec):
+    """Metadata on a loaded capsule."""
 
     name: str
-    """The name of the plugin"""
+    """The name of the capsule"""
 
     version: int
-    """The plugin's version"""
+    """The capsule's version"""
 
     description: str
-    """A human-readable description of what the plugin does"""
+    """A human-readable description of what the capsule does"""
 
     input_type: NodeDescription
-    """Describes the type of inference data that this plugin takes as input
+    """Describes the type of inference data that this capsule takes as input
     """
 
     output_type: NodeDescription
-    """Describes the type of inference data that this plugin produces"""
+    """Describes the type of inference data that this capsule produces"""
 
     capability: NodeDescription
-    """A NodeDescription which describes what this plugin does to its
+    """A NodeDescription which describes what this capsule does to its
     input. It is the difference between the input and output
-    NodeDescriptions. This field is useful for inspecting a plugin to find
+    NodeDescriptions. This field is useful for inspecting a capsule to find
     what it can do.
     """
 
-    options: Dict[str, PluginOption]
-    """A dict describing the configurable options of this plugin"""
+    options: Dict[str, CapsuleOption]
+    """A dict describing the configurable options of this capsule"""
 
     def to_dict(self):
         return {
@@ -202,13 +202,13 @@ class Plugin(Codec):
 
     @staticmethod
     def from_dict(d):
-        return Plugin(
+        return Capsule(
             name=d["name"],
             version=d["version"],
             description=d["description"],
             input_type=NodeDescription.from_dict(d["input_type"]),
             output_type=NodeDescription.from_dict(d["output_type"]),
             capability=NodeDescription.from_dict(d["capability"]),
-            options={key: PluginOption.from_dict(val)
+            options={key: CapsuleOption.from_dict(val)
                      for key, val in d["options"].items()},
         )

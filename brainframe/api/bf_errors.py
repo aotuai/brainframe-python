@@ -192,16 +192,16 @@ class FrameNotFoundForAlertError(BaseAPIError):
     """There was an attempt to get a frame for an alert that has no frame."""
 
 
-@_register_error()
-class PluginNotFoundError(BaseAPIError):
-    """There was an attempt to reference a plugin that does not exist."""
+@_register_error("PluginNotFoundError")
+class CapsuleNotFoundError(BaseAPIError):
+    """There was an attempt to reference a capsule that does not exist."""
 
 
-@_register_error()
-class InvalidPluginOptionError(BaseAPIError):
-    """The provided plugin options do not work for the given plugin. This could
-    be because the option does not exist or the value for that option doesn't
-    fit the constraints.
+@_register_error("InvalidPluginOptionError")
+class InvalidCapsuleOptionError(BaseAPIError):
+    """The provided capsule options do not work for the given capsule. This
+    could be because the option does not exist or the value for that option
+    doesn't fit the constraints.
     """
 
 
