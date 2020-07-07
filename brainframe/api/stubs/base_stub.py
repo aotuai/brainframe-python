@@ -1,14 +1,13 @@
+import json
 import logging
+import typing
 from typing import Any, BinaryIO, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 import requests
-import json
 from requests import Response
 
-from brainframe.api.bf_codecs import Codec
-from brainframe.api.bf_errors import InvalidSessionError, UnknownError, \
-    kind_to_error_type
+from brainframe.api import bf_codecs, bf_errors
 
 DEFAULT_TIMEOUT = 30
 """The default timeout for most requests."""
@@ -76,7 +75,7 @@ class BaseStub:
             return json.loads(resp.content)
         return None
 
-    def _post_codec(self, api_url, timeout, codec: Codec):
+    def _post_codec(self, api_url, timeout, codec: bf_codecs.Codec):
         """Send a POST request to the given URL.
 
         :param api_url: The /api/blah/blah to append to the base_url
@@ -272,33 +271,29 @@ class BaseStub:
         """
         if self._credentials is None:
             # No credentials provided, send the request without any auth
-            resp = self._send_no_auth(request, timeout)
+            send_func = self._send_no_auth
         elif self._session_id is None:
             # Authenticate with username and password to get a new session ID
-            resp = self._send_with_credentials(request, timeout)
+            send_func = self._send_with_credentials
         else:
             # Authenticate with the session ID
-            resp = self._send_with_session_id(request, timeout)
+            send_func = self._send_with_session_id
 
+        resp = send_func(request, timeout)
         return resp
 
     def _send_no_auth(self, request: requests.Request, timeout) \
             -> requests.Response:
         """Sends the given request with no authorization."""
         resp = self._send_request(request, timeout)
-        if not resp.ok:
-            raise _make_api_error(resp.content, resp.status_code)
-
         return resp
 
     def _send_with_credentials(self, request: requests.Request, timeout) \
             -> requests.Response:
         """Sends the given request with HTTP Basic Authorization."""
-        request.auth = self._credentials
 
+        request.auth = self._credentials
         resp = self._send_request(request, timeout)
-        if not resp.ok:
-            raise _make_api_error(resp.content, resp.status_code)
 
         if "session_id" in resp.cookies:
             # Update the session ID if we don't already have one
@@ -310,12 +305,9 @@ class BaseStub:
             -> requests.Response:
         """Sends the given request with the session ID."""
         request.cookies = {"session_id": self._session_id}
-
         try:
             resp = self._send_request(request, timeout)
-            if not resp.ok:
-                raise _make_api_error(resp.content, resp.status_code)
-        except InvalidSessionError:
+        except bf_errors.InvalidSessionError:
             # The session likely expired. Try again with the username and
             # password to fetch a new session
             request.cookies = None
@@ -333,38 +325,102 @@ class BaseStub:
         :return: The response data
         """
         prepared = request.prepare()
-        return requests.Session().send(prepared, stream=True, timeout=timeout)
+
+        session = requests.Session()
+        try:
+            resp = session.send(prepared, stream=True, timeout=timeout)
+        except requests.exceptions.RequestException as exc:
+            raise _make_api_error(exception=exc)
+
+        if not resp.ok:
+            raise _make_api_error(resp=resp)
+
+        return resp
 
 
-def _make_api_error(resp_content, status_code):
+@typing.overload
+def _make_api_error(exception: Exception) -> bf_errors.BaseAPIError:
+    ...
+
+
+@typing.overload
+def _make_api_error(resp: requests.Response) -> bf_errors.BaseAPIError:
+    ...
+
+
+def _make_api_error(resp: requests.Response = None,
+                    exception: BaseException = None) \
+        -> bf_errors.BaseAPIError:
     """Makes the corresponding error for this response.
 
-    :param resp_content: The HTTP response to inspect for info
+    Pass either a requests.Response with a status code, or an exception
+
+    :param resp: The HTTP response to inspect for info
+    :param exception: An exception during the request
     :return: An error that can be thrown describing this failure
     """
-    if len(resp_content) == 0:
-        kind = UnknownError.kind
-        description = ("A failure happened but the server did not respond "
-                       "with a proper error")
-    else:
-        try:
-            resp_content = json.loads(resp_content)
-            kind = resp_content["title"]
-            description = resp_content["description"]
-        except ValueError:
-            # The content of the error was not in the proper format. This might
-            # happen if some part of our request handling pipeline failed that
-            # doesn't know about our error handling format. Not ideal.
-            kind = UnknownError.kind
-            resp_content = resp_content.decode("utf-8")
-            description = ("A failure happened, and the response was not in "
-                           "the proper error format: " + resp_content)
 
-    if kind not in kind_to_error_type:
-        info = f"Unknown error kind {kind}: " + description
-        logging.error(info)
-        return UnknownError(info, status_code)
+    server_not_ready_msg = "A network exception occurred while communicating " \
+                           "with the BrainFrame server"
+
+    if resp is not None:
+        if len(resp.content) == 0:
+            description = ("A failure happened but the server did not respond "
+                           "with a proper error")
+            return bf_errors.UnknownError(description)
+        else:
+            resp_content = resp.content.decode("utf-8")
+
+            # This is here to catch the nginx error that can occur as the server
+            # starts up
+            if resp.status_code == 502:
+                description = f"{server_not_ready_msg}: {resp_content}"
+                return bf_errors.ServerNotReadyError(description)
+
+            try:
+                resp_content = json.loads(resp.content)
+                kind = resp_content["title"]
+                description = resp_content["description"]
+            except ValueError:
+                # The content of the error was not in the proper format. This
+                # might happen if some part of our request handling pipeline
+                # failed that doesn't know about our error handling format. Not
+                # ideal.
+                exc_type = bf_errors.UnknownError
+                description = (
+                    f"A failure happened, and the response was not in "
+                    f"the proper error format: {resp_content}"
+                )
+            else:
+                try:
+                    exc_type = bf_errors.kind_to_error_type[kind]
+                except KeyError:
+                    description = f"Unknown error kind {kind}: {description}"
+                    logging.error(description)
+                    exc_type = bf_errors.UnknownError
+
+            if exc_type is bf_errors.UnknownError:
+                return exc_type(description, resp.status_code)
+            else:
+                return exc_type(description)
+
+    elif exception is not None:
+        if isinstance(exception, requests.exceptions.RequestException):
+            exc_type = bf_errors.ServerNotReadyError
+            description = server_not_ready_msg
+        else:
+            exc_type = bf_errors.UnknownError
+            description = "An unknown network exception occurred while " \
+                          "attempting to communicate with the BrainFrame server"
+
+        new_exc = exc_type(description)
+        # This is identical to `raise x from y`, but does not immediately raise
+        new_exc.__cause__ = exception
+        return new_exc
+
     else:
-        if kind == UnknownError.kind:
-            return kind_to_error_type[kind](description, status_code)
-        return kind_to_error_type[kind](description)
+        description = f"{_make_api_error.__name__} called without arguments"
+        new_exc = ValueError(description)
+        if exception is not None:
+            new_exc.__cause__ = exception
+        raise new_exc

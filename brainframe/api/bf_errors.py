@@ -1,7 +1,6 @@
 import re
 from typing import Optional
 
-
 kind_to_error_type = {}
 """Maps error kinds to their corresponding error type."""
 
@@ -14,6 +13,7 @@ def _register_error(kind: Optional[str] = None):
     :param kind: If provided, this class will be associated with this kind
         instead of using the class's name as the kind
     """
+
     def wrapper(cls):
         global kind_to_error_type
         nonlocal kind
@@ -290,3 +290,9 @@ class RemoteConnectionError(BaseAPIError):
     """The server encountered an error while connecting to a remote resource
     that is required for the requested operation.
     """
+
+
+@_register_error()
+class ServerNotReadyError(BaseAPIError):
+    """The client was able to communicate with the server, but the server had
+    not completed startup or was in an invalid state"""

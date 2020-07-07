@@ -3,10 +3,7 @@ from threading import RLock, Thread
 from time import sleep
 from typing import Any, Callable, Dict, List, Optional
 
-import requests
-
-from .bf_errors import UnknownError
-from .bf_codecs import ZoneStatus
+from . import bf_codecs, bf_errors
 from .stubs.zone_statuses import ZONE_STATUS_STREAM_TYPE, ZONE_STATUS_TYPE
 
 
@@ -53,7 +50,8 @@ class StatusReceiver:
     def is_running(self) -> bool:
         return self._running
 
-    def latest_statuses(self, stream_id: int) -> Dict[str, ZoneStatus]:
+    def latest_statuses(self, stream_id: int) \
+            -> Dict[str, bf_codecs.ZoneStatus]:
         """Returns the latest cached list of ZoneStatuses for that stream_id,
         or any empty dict if none are cached"""
         return self._latest_statuses.get(stream_id, {})
@@ -83,15 +81,7 @@ class StatusReceiver:
                     timeout=self._ZONE_STATUS_STREAM_TIMEOUT)
             try:
                 zone_statuses = next(zone_status_stream)
-            except (StopIteration,
-                    requests.exceptions.RequestException,
-                    UnknownError) as ex:
-
-                # Catch any 502 errors that happen during server restart
-                if isinstance(ex, UnknownError) \
-                        and ex.status_code != 502:
-                    raise
-
+            except (StopIteration, bf_errors.ServerNotReadyError) as ex:
                 if not self._running:
                     break
 
