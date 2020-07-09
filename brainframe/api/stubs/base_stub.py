@@ -315,14 +315,13 @@ class BaseStub:
 
         return resp
 
-    @staticmethod
-    def _perform_request(*args, **kwargs):
+    def _perform_request(self, *args, **kwargs):
         """Sends a request and handles any errors in the result
 
         All arguments are passed to BaseStub._send_request
         """
         try:
-            resp = BaseStub._send_request(*args, **kwargs)
+            resp = self._send_request(*args, **kwargs)
         except requests.exceptions.RequestException as exc:
             raise _make_api_error(exception=exc)
 
