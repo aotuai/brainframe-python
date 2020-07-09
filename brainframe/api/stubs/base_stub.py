@@ -285,7 +285,7 @@ class BaseStub:
     def _send_no_auth(self, request: requests.Request, timeout) \
             -> requests.Response:
         """Sends the given request with no authorization."""
-        resp = self._send_request(request, timeout)
+        resp = self._perform_request(request, timeout)
         return resp
 
     def _send_with_credentials(self, request: requests.Request, timeout) \
@@ -293,7 +293,7 @@ class BaseStub:
         """Sends the given request with HTTP Basic Authorization."""
 
         request.auth = self._credentials
-        resp = self._send_request(request, timeout)
+        resp = self._perform_request(request, timeout)
 
         if "session_id" in resp.cookies:
             # Update the session ID if we don't already have one
@@ -306,12 +306,28 @@ class BaseStub:
         """Sends the given request with the session ID."""
         request.cookies = {"session_id": self._session_id}
         try:
-            resp = self._send_request(request, timeout)
+            resp = self._perform_request(request, timeout)
         except bf_errors.InvalidSessionError:
             # The session likely expired. Try again with the username and
             # password to fetch a new session
             request.cookies = None
             return self._send_with_credentials(request, timeout)
+
+        return resp
+
+    @staticmethod
+    def _perform_request(*args, **kwargs):
+        """Sends a request and handles any errors in the result
+
+        All arguments are passed to BaseStub._send_request
+        """
+        try:
+            resp = BaseStub._send_request(*args, **kwargs)
+        except requests.exceptions.RequestException as exc:
+            raise _make_api_error(exception=exc)
+
+        if not resp.ok:
+            raise _make_api_error(resp=resp)
 
         return resp
 
@@ -325,17 +341,7 @@ class BaseStub:
         :return: The response data
         """
         prepared = request.prepare()
-
-        session = requests.Session()
-        try:
-            resp = session.send(prepared, stream=True, timeout=timeout)
-        except requests.exceptions.RequestException as exc:
-            raise _make_api_error(exception=exc)
-
-        if not resp.ok:
-            raise _make_api_error(resp=resp)
-
-        return resp
+        return requests.Session().send(prepared, stream=True, timeout=timeout)
 
 
 @typing.overload
