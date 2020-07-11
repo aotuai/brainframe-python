@@ -58,6 +58,12 @@ class ZoneStatusStubMixin(BaseStub):
                     message = "Incomplete packet while attempting to read " \
                               "from zone status iterator"
                     raise bf_errors.ServerNotReadyError(message) from exc
+                except requests.exceptions.RequestException as exc:
+                    message = "A network exception occurred while " \
+                              "communicating with the BrainFrame server"
+                    new_exc = bf_errors.ServerNotReadyError(message)
+                    new_exc.__cause__ = exc
+                    raise bf_errors.ServerNotReadyError(message)
 
                 if packet == b'':
                     continue
