@@ -3,7 +3,7 @@ from time import sleep, time
 
 from requests.exceptions import ConnectionError, ReadTimeout
 
-from .bf_errors import UnauthorizedError, UnknownError
+from .bf_errors import UnauthorizedError, UnknownError, ServerNotReadyError
 from . import stubs
 from .stubs.base_stub import DEFAULT_TIMEOUT
 
@@ -59,8 +59,8 @@ class BrainFrameAPI(stubs.AlertStubMixin,
             try:
                 # Test connection to server
                 self.version()
-            except (ConnectionError, ConnectionRefusedError,
-                    UnauthorizedError, ReadTimeout):
+            except (ConnectionError, ConnectionRefusedError, ReadTimeout,
+                    UnauthorizedError, ServerNotReadyError):
                 # Server not started yet or there is a communication
                 # error
                 pass
