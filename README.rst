@@ -37,7 +37,7 @@ Installation
 
 The BrainFrame Python API is available on PyPI and can be installed with pip.
 Install the version of the library that matches the version of BrainFrame that
-you are using.
+you are using. For example, if you are using BrainFrame version 0.26.0:
 
 .. code-block:: bash
 
