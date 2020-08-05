@@ -14,7 +14,7 @@ setup(
     use_scm_version={
         # We want to be able to push these releases to PyPI, which doesn't
         # support local versions. Local versions are anything after the "+" in
-        # a version string like "0.26.0.dev16+cooltext".
+        # a version string like "0.26.1.dev16+cooltext".
         "local_scheme": "no-local-version",
     },
 
