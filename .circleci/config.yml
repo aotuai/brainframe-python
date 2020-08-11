@@ -23,4 +23,4 @@ jobs:
       - checkout
       - run: pip3 install --upgrade setuptools wheel twine
       - run: python3 setup.py sdist bdist_wheel
-      - run: TWINE_PASSWORD=${PYPI_PASSWORD} python3 -m twine upload --repository testpypi dist/*
+      - run: TWINE_PASSWORD=${PYPI_PASSWORD} python3 -m twine upload dist/*
