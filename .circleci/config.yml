@@ -1,0 +1,22 @@
+version: 2.1
+
+workflow:
+  deploy:
+    jobs:
+      - upload_to_pypi
+          filters:
+            branches:
+              only: v*.*
+
+jobs:
+  upload_to_pypi:
+    steps:
+      - add_ssh_keys
+      - run: apt update && apt install -y ssh git
+      - run: ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
+      - checkout
+      - run: apt update && apt install -y python3-pip
+      - run: pip3 install --upgrade setuptools wheel twine
+      - run: >
+        python3 setup.py sdist bdist_wheel
+        python3 -m twine upload dist/*
