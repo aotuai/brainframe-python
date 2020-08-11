@@ -1,6 +1,6 @@
 version: 2.1
 
-workflow:
+workflows:
   deploy:
     jobs:
       - upload_to_pypi
