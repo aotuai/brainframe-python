@@ -5,8 +5,12 @@ workflows:
     jobs:
       - upload_to_pypi:
           filters:
+            # Ignore any commit on any branch by default
+            branches:
+              ignore: /.*/
+            # Run only when a tag is created
             tags:
-              only: v*.*
+              only: v*.*.*
 
 jobs:
   upload_to_pypi:
