@@ -12,7 +12,6 @@ jobs:
   upload_to_pypi:
     environment:
       TWINE_USERNAME: __token__
-      TWINE_PASSWORD:
     steps:
       - add_ssh_keys
       - run: apt update && apt install -y ssh git
