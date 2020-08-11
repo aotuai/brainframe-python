@@ -11,7 +11,7 @@ workflows:
 jobs:
   upload_to_pypi:
     docker:
-      - image: python:3.6
+      - image: circleci/python:3.6
     environment:
       TWINE_USERNAME: __token__
       TWINE_PASSWORD: ${TEST_PYPI_PASSWORD}
