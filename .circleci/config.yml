@@ -4,12 +4,15 @@ workflow:
   deploy:
     jobs:
       - upload_to_pypi
-          filters:
-            branches:
-              only: v*.*
+#          filters:
+#            branches:
+#              only: v*.*
 
 jobs:
   upload_to_pypi:
+    environment:
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD:
     steps:
       - add_ssh_keys
       - run: apt update && apt install -y ssh git
@@ -19,4 +22,4 @@ jobs:
       - run: pip3 install --upgrade setuptools wheel twine
       - run: >
         python3 setup.py sdist bdist_wheel
-        python3 -m twine upload dist/*
+        TWINE_PASSWORD=${TEST_PYPI_PASSWORD} python3 -m twine upload --repository testpypi dist/*
