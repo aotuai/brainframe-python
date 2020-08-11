@@ -20,5 +20,5 @@ jobs:
       - run: apt update && apt install -y python3-pip
       - run: pip3 install --upgrade setuptools wheel twine
       - run: >
-        python3 setup.py sdist bdist_wheel
-        TWINE_PASSWORD=${TEST_PYPI_PASSWORD} python3 -m twine upload --repository testpypi dist/*
+          python3 setup.py sdist bdist_wheel
+          TWINE_PASSWORD=${TEST_PYPI_PASSWORD} python3 -m twine upload --repository testpypi dist/*
