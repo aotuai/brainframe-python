@@ -3,7 +3,7 @@ version: 2.1
 workflows:
   deploy:
     jobs:
-      - upload_to_pypi
+      - upload_to_pypi:
           filters:
             branches:
               only: v*.*
