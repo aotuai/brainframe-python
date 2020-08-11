@@ -4,9 +4,9 @@ workflows:
   deploy:
     jobs:
       - upload_to_pypi
-#          filters:
-#            branches:
-#              only: v*.*
+          filters:
+            branches:
+              only: v*.*
 
 jobs:
   upload_to_pypi:
@@ -19,4 +19,4 @@ jobs:
       - checkout
       - run: pip3 install --upgrade setuptools wheel twine
       - run: python3 setup.py sdist bdist_wheel
-      - run: TWINE_PASSWORD=${TEST_PYPI_PASSWORD} python3 -m twine upload --repository testpypi dist/*
+      - run: TWINE_PASSWORD=${PYPI_PASSWORD} python3 -m twine upload --repository testpypi dist/*
