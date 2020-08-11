@@ -10,14 +10,12 @@ workflow:
 
 jobs:
   upload_to_pypi:
+    docker:
+      - image: python:3.6
     environment:
       TWINE_USERNAME: __token__
     steps:
-      - add_ssh_keys
-      - run: apt update && apt install -y ssh git
-      - run: ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
       - checkout
-      - run: apt update && apt install -y python3-pip
       - run: pip3 install --upgrade setuptools wheel twine
       - run: >
           python3 setup.py sdist bdist_wheel
