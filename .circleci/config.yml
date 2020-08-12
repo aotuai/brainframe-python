@@ -10,7 +10,7 @@ workflows:
               ignore: /.*/
             # Run only when a tag is created
             tags:
-              only: v*.*.*
+              only: /^v.+\..+\..+/
 
 jobs:
   upload_to_pypi:
