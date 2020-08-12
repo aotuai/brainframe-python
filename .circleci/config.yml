@@ -1,0 +1,26 @@
+version: 2.1
+
+workflows:
+  deploy:
+    jobs:
+      - upload_to_pypi:
+          filters:
+            # Ignore any commit on any branch by default
+            branches:
+              ignore: /.*/
+            # Run only when a tag is created
+            tags:
+              only: /^v.+\..+\..+/
+
+jobs:
+  upload_to_pypi:
+    docker:
+      - image: circleci/python:3.6
+    environment:
+      POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
+
+    steps:
+      - checkout
+      - run: pip3 install --upgrade poetry
+      - run: poetry build
+      - run: POETRY_HTTP_BASIC_PYPI_PASSWORD=${PYPI_PASSWORD} poetry publish
