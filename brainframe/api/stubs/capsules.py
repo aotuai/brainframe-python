@@ -30,12 +30,12 @@ class CapsuleStubMixin(BaseStub):
         return [Capsule.from_dict(d) for d in capsules]
 
     def set_capsule(self, storage_id: int,
-                    source_code_path: Optional[Path] = None,
+                    source_path: Optional[Path] = None,
                     timeout=DEFAULT_TIMEOUT) -> Capsule:
         """Sends capsule data to the server to be loaded and initialized.
 
         :param storage_id: The ID of the raw capsule data
-        :param source_code_path: The path to the source code on the development
+        :param source_path: The path to the source code on the development
             machine, if available. Providing this allows stack traces to point
             to the correct source location.
         :param timeout: The timeout to use for this request
@@ -44,7 +44,7 @@ class CapsuleStubMixin(BaseStub):
         req = f"/api/plugins"
         req_object = {
             "storage_id": storage_id,
-            "source_code_path": str(source_code_path),
+            "source_path": str(source_path),
         }
         capsule, _ = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
