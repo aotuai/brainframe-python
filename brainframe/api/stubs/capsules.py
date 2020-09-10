@@ -46,7 +46,7 @@ class CapsuleStubMixin(BaseStub):
             "storage_id": storage_id,
             "source_path": str(source_path),
         }
-        capsule, _ = self._put_json(req, timeout, json.dumps(req_object))
+        capsule = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
 
     def get_capsule_option_vals(self, capsule_name, stream_id=None,
