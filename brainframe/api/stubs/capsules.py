@@ -49,6 +49,16 @@ class CapsuleStubMixin(BaseStub):
         capsule = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
 
+    def unload_capsule(self, capsule_name: str, timeout=DEFAULT_TIMEOUT):
+        """Unloads a capsule. This method may only be used with capsules that
+        were loaded through the REST API.
+
+        :param capsule_name: The name of the capsule to unload
+        :param timeout: The timeout to use for this request
+        """
+        req = f"/api/plugins/{capsule_name}"
+        self._delete(req, timeout)
+
     def get_capsule_option_vals(self, capsule_name, stream_id=None,
                                 timeout=DEFAULT_TIMEOUT) \
             -> Dict[str, object]:
