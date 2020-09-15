@@ -44,7 +44,9 @@ class CapsuleStubMixin(BaseStub):
         req = f"/api/plugins"
         req_object = {
             "storage_id": storage_id,
-            "source_path": str(source_path),
+            "dev_options": {
+                "source_path": str(source_path),
+            },
         }
         capsule = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
