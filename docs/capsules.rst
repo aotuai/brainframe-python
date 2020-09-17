@@ -3,8 +3,7 @@ Capsules
 
 A capsule is a single file with a ``.cap`` file extension. It contains the
 code, metadata, model files, and any other files the capsule needs to operate.
-See the `Introduction to Capsules`_ section in the User Manual for more
-information.
+See the `Introduction to Capsules`_ for more information.
 
 API Methods
 -----------
@@ -30,4 +29,4 @@ Data Structures
    :members:
 
 .. _`Introduction to Capsules`:
-   https://aotu.ai/docs/capsule_development/introduction/
+   https://openvisioncapsules.readthedocs.io/en/latest/introduction.html
