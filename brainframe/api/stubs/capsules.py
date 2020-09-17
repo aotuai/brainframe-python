@@ -1,12 +1,14 @@
 import json
-from typing import Dict, List, Optional
 from pathlib import Path
+from time import time
+from typing import Dict, List, Optional, BinaryIO, Union, Iterable
 
 from brainframe.api.bf_codecs import Capsule
-from .base_stub import BaseStub, DEFAULT_TIMEOUT
+from .base_stub import DEFAULT_TIMEOUT
+from .storage import StorageStubMixin
 
 
-class CapsuleStubMixin(BaseStub):
+class CapsuleStubMixin(StorageStubMixin):
     """Provides stubs to call APIs to inspect and configure capsules."""
 
     def get_capsule(self, name,
@@ -29,15 +31,15 @@ class CapsuleStubMixin(BaseStub):
         capsules, _ = self._get_json(req, timeout)
         return [Capsule.from_dict(d) for d in capsules]
 
-    def set_capsule(self, storage_id: int,
-                    source_path: Optional[Path] = None,
-                    timeout=DEFAULT_TIMEOUT) -> Capsule:
-        """Sends capsule data to the server to be loaded and initialized.
+    def load_capsule(self, storage_id: int,
+                     source_path: Optional[Path] = None,
+                     timeout=DEFAULT_TIMEOUT) -> Capsule:
+        """Loads and initializes a capsule from capsule data in storage.
 
-        :param storage_id: The ID of the raw capsule data
-        :param source_path: The path to the source code on the development
-            machine, if available. Providing this allows stack traces to point
-            to the correct source location.
+        :param storage_id: The ID of the raw capsule data in storage
+        :param source_path: If available, the path to the source code on the
+            development machine can be provided. Doing so allows stack traces
+            to point to the correct source location.
         :param timeout: The timeout to use for this request
         :return: The loaded capsule
         """
@@ -51,9 +53,34 @@ class CapsuleStubMixin(BaseStub):
         capsule = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
 
-    def delete_capsule(self, capsule_name: str, timeout=DEFAULT_TIMEOUT):
-        """Unloads a capsule. This method may only be used with capsules that
-        were loaded through the REST API.
+    def upload_and_load_capsule(self, data: Union[bytes, BinaryIO, Iterable],
+                                source_path: Optional[Path] = None,
+                                timeout=DEFAULT_TIMEOUT) -> Capsule:
+        """Uploads capsule data to storage, then loads and initializes a
+        capsule from it. This is a utility method that combines the
+        functionality of `new_storage` and `load_capsule`.
+
+        :param data: The data to store, either as bytes or as a file-like
+        :param source_path: If available, the path to the source code on the
+            development machine can be provided. Doing so allows stack traces
+            to point to the correct source location.
+        :param timeout: The total timeout to use for all requests
+        :return: The loaded capsule
+        """
+        request_start = time()
+        storage_id = self.new_storage(data,
+                                      mime_type="application/octet-stream",
+                                      timeout=timeout)
+        remaining_time = timeout - (time() - request_start)
+
+        return self.load_capsule(storage_id,
+                                 source_path,
+                                 timeout=remaining_time)
+
+    def unload_capsule(self, capsule_name: str,
+                       timeout=DEFAULT_TIMEOUT) -> None:
+        """Unloads a capsule and deletes its data from storage. This method may
+        only be used with capsules that were loaded through the REST API.
 
         :param capsule_name: The name of the capsule to unload
         :param timeout: The timeout to use for this request

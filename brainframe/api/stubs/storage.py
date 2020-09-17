@@ -1,8 +1,8 @@
+import json
 from io import BytesIO
 from typing import BinaryIO, Iterable, Tuple, Union
 
 import numpy as np
-import json
 from PIL import Image
 
 from brainframe.api.bf_codecs import image_utils

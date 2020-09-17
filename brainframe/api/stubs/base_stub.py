@@ -58,7 +58,7 @@ class BaseStub:
             return json.loads(resp.content), resp.headers
         return None, resp.headers
 
-    def _put_json(self, api_url, timeout, json_data) -> Optional[Any]:
+    def _put_json(self, api_url, timeout, json_data) -> Any:
         """Send a PUT request to the given URL.
 
         :param api_url: The /api/blah/blah to append to the base_url
