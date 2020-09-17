@@ -13,6 +13,10 @@ API Methods
 
 .. automethod:: brainframe.api.BrainFrameAPI.get_capsules
 
+.. automethod:: brainframe.api.BrainFrameAPI.set_capsule
+
+.. automethod:: brainframe.api.BrainFrameAPI.delete_capsule
+
 .. automethod:: brainframe.api.BrainFrameAPI.get_capsule_option_vals
 
 .. automethod:: brainframe.api.BrainFrameAPI.set_capsule_option_vals
