@@ -33,7 +33,7 @@ class CapsuleStubMixin(StorageStubMixin):
 
     def load_capsule(self, storage_id: int,
                      source_path: Optional[Path] = None,
-                     timeout=DEFAULT_TIMEOUT) -> Capsule:
+                     timeout: float = DEFAULT_TIMEOUT) -> Capsule:
         """Loads and initializes a capsule from capsule data in storage.
 
         :param storage_id: The ID of the raw capsule data in storage
@@ -53,9 +53,9 @@ class CapsuleStubMixin(StorageStubMixin):
         capsule = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
 
-    def upload_and_load_capsule(self, data: Union[bytes, BinaryIO, Iterable],
+    def upload_and_load_capsule(self, data: Union[bytes, BinaryIO],
                                 source_path: Optional[Path] = None,
-                                timeout=DEFAULT_TIMEOUT) -> Capsule:
+                                timeout: float = DEFAULT_TIMEOUT) -> Capsule:
         """Uploads capsule data to storage, then loads and initializes a
         capsule from it. This is a utility method that combines the
         functionality of `new_storage` and `load_capsule`.
@@ -78,7 +78,7 @@ class CapsuleStubMixin(StorageStubMixin):
                                  timeout=remaining_time)
 
     def unload_capsule(self, capsule_name: str,
-                       timeout=DEFAULT_TIMEOUT) -> None:
+                       timeout: float = DEFAULT_TIMEOUT) -> None:
         """Unloads a capsule and deletes its data from storage. This method may
         only be used with capsules that were loaded through the REST API.
 
