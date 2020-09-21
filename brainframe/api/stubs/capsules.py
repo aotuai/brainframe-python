@@ -66,21 +66,16 @@ class CapsuleStubMixin(StorageStubMixin):
         :param source_path: If available, the path to the source code on the
             development machine can be provided. Doing so allows stack traces
             to point to the correct source location.
-        :param timeout: The total timeout to use for all requests
+        :param timeout: The timeout to use for each request
         :return: The loaded capsule
         """
-        request_start = time()
         storage_id = self.new_storage(data,
                                       mime_type="application/octet-stream",
                                       timeout=timeout)
-        remaining_time = timeout - (time() - request_start)
-
-        if remaining_time <= 0:
-            raise requests.exceptions.Timeout()
 
         return self.load_capsule(storage_id,
                                  source_path,
-                                 timeout=remaining_time)
+                                 timeout=timeout)
 
     def unload_capsule(self, capsule_name: str,
                        timeout: float = DEFAULT_TIMEOUT) -> None:
