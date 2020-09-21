@@ -1,7 +1,9 @@
 import json
 from pathlib import Path
 from time import time
-from typing import Dict, List, Optional, BinaryIO, Union, Iterable
+from typing import Dict, List, Optional, BinaryIO, Union
+
+import requests.exceptions
 
 from brainframe.api.bf_codecs import Capsule
 from .base_stub import DEFAULT_TIMEOUT
@@ -72,6 +74,9 @@ class CapsuleStubMixin(StorageStubMixin):
                                       mime_type="application/octet-stream",
                                       timeout=timeout)
         remaining_time = timeout - (time() - request_start)
+
+        if remaining_time <= 0:
+            raise requests.exceptions.Timeout()
 
         return self.load_capsule(storage_id,
                                  source_path,
