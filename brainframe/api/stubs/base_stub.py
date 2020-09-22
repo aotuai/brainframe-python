@@ -58,13 +58,13 @@ class BaseStub:
             return json.loads(resp.content), resp.headers
         return None, resp.headers
 
-    def _put_json(self, api_url, timeout, json_data):
+    def _put_json(self, api_url, timeout, json_data) -> Any:
         """Send a PUT request to the given URL.
 
         :param api_url: The /api/blah/blah to append to the base_url
         :param timeout: The timeout to use for this request
         :param json_data: Pre-formatted JSON to send
-        :return: The JSON response as a dict, or None if none was sent
+        :return: The parsed response, or None if none was sent
         """
         resp = self._put(api_url,
                          timeout,

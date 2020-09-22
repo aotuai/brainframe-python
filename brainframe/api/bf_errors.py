@@ -292,6 +292,17 @@ class RemoteConnectionError(BaseAPIError):
     """
 
 
+@_server_origin_error()
+class InvalidCapsuleError(BaseAPIError):
+    """The provided capsule could not be loaded."""
+
+
+@_server_origin_error()
+class IncompatibleCapsuleError(BaseAPIError):
+    """The provided capsule is not compatible with this version of BrainFrame.
+    """
+
+
 class ServerNotReadyError(BaseAPIError):
     """The client was able to communicate with the server, but the server had
     not completed startup or was in an invalid state"""
