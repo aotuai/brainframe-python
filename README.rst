@@ -41,7 +41,7 @@ you are using. For example, if you are using BrainFrame version 0.26.1:
 
 .. code-block:: bash
 
-   pip3 install brainframe-api==0.26.1
+   pip3 install brainframe-api
 
 Documentation
 -------------
