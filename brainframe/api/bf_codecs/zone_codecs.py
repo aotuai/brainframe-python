@@ -11,7 +11,7 @@ from .detection_codecs import Detection
 @dataclass
 class Zone(Codec):
     """The definition for a zone. It is a non-convex polygon or a line."""
-    FULL_FRAME_ZONE_NAME: ClassVar[str] = "SCREEN"
+    FULL_FRAME_ZONE_NAME: ClassVar[str] = "Screen"
     """The name of the default full-frame zone that exists on every stream"""
 
     name: str
