@@ -16,7 +16,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6"
 requests = "^2.24.0"
-pillow = "^7.2.0"
+pillow = ">=7.2,<9.0"
 numpy = "^1.16"
 dataclasses = { version = "^0.7", python = ">=3.6,<3.7" }
 
