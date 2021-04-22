@@ -30,11 +30,11 @@ class StatusReceiver:
 
         self._latest_statuses = {}
 
-        # no cleanup code so we can just die when the main thread dies
-        self.daemon = True
-
-        self._thread = Thread(name="StatusReceiverThread",
-                              target=self._run)
+        self._thread = Thread(
+            name="StatusReceiverThread",
+            target=self._run,
+            daemon=True,
+        )
         self._running = True
         self._thread.start()
 
