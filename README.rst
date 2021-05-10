@@ -6,8 +6,8 @@ BrainFrame Python API
    :target: https://brainframe-python-api.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://circleci.com/gh/aotuai/brainframe_python.svg?style=svg
-   :target: https://circleci.com/gh/aotuai/brainframe_python
+.. image:: https://circleci.com/gh/aotuai/brainframe-python.svg?style=svg
+   :target: https://circleci.com/gh/aotuai/brainframe-python
    :alt: Publish Packages CI Status
 
 This library is a Python wrapper around the BrainFrame REST API. It allows for
