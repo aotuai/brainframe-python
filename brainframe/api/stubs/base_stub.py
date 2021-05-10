@@ -58,6 +58,24 @@ class BaseStub:
             return json.loads(resp.content), resp.headers
         return None, resp.headers
 
+    def _put_codec(self, api_url, timeout, codec: bf_codecs.Codec):
+        """Send a PUT request to the given URL.
+
+        :param api_url: The path to append to the base_url
+        :param timeout: The timeout to use for this request
+        :param codec: A codec to convert to JSON and send
+        :return: The JSON response as a dict, or None if none was sent
+        """
+        codec_data = codec.to_json()
+        resp = self._put(api_url,
+                         timeout,
+                         data=codec_data,
+                         content_type="application/json")
+
+        if resp.content:
+            return json.loads(resp.content)
+        return None
+
     def _put_json(self, api_url, timeout, json_data) -> Any:
         """Send a PUT request to the given URL.
 
