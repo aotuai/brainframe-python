@@ -12,4 +12,5 @@ from .encodings import EncodingStubMixIn
 from .premises import PremisesStubMixin
 from .users import UserStubMixin
 from .licenses import LicenseStubMixIn
+from .cloud_tokens import CloudTokensStubMixin
 from .base_stub import BaseStub
