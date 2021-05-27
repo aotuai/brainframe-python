@@ -308,6 +308,11 @@ class UnauthorizedTokensError(BaseAPIError):
     """The provided tokens do not correctly authorize a BrainFrame Cloud user"""
 
 
+@_server_origin_error()
+class CloudUserNotFoundError(BaseAPIError):
+    """No cloud user is logged in"""
+
+
 class ServerNotReadyError(BaseAPIError):
     """The client was able to communicate with the server, but the server had
     not completed startup or was in an invalid state"""
