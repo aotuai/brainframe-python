@@ -7,7 +7,13 @@ from .base_stub import BaseStub, DEFAULT_TIMEOUT
 
 
 class CloudUsersStubMixIn(BaseStub):
-    def get_cloud_user(self, timeout=DEFAULT_TIMEOUT) -> Optional[CloudUserInfo]:
+    def get_current_cloud_user(self, timeout=DEFAULT_TIMEOUT) \
+            -> Optional[CloudUserInfo]:
+        """Gets information on the cloud user that's currently logged in.
+
+        :param timeout: The timeout to use for this request
+        :return: Information on the cloud user, or None if no user is logged in
+        """
         req = f"/api/cloud_user"
         try:
             data, _ = self._get_json(req, timeout=timeout)
