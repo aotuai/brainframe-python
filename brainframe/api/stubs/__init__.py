@@ -13,4 +13,5 @@ from .premises import PremisesStubMixin
 from .users import UserStubMixin
 from .licenses import LicenseStubMixIn
 from .cloud_tokens import CloudTokensStubMixin
+from .cloud_users import CloudUsersStubMixIn
 from .base_stub import BaseStub
