@@ -57,7 +57,7 @@ class ZoneStubMixin(BaseStub):
         req = f"/api/zones/{zone_id}"
         self._delete(req, timeout)
 
-    def is_zone_read_only(self, zone_id: int, timeout=DEFAULT_TIMEOUT) -> bool:
+    def is_zone_read_only(self, zone_id: int, timeout: float = DEFAULT_TIMEOUT) -> bool:
         """Checks if a zone is read-only. This refers to the zone itself, not its
         alarms or any other attached resources.
 
