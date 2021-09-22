@@ -56,3 +56,21 @@ class ZoneStubMixin(BaseStub):
         """
         req = f"/api/zones/{zone_id}"
         self._delete(req, timeout)
+
+    def is_zone_read_only(self, zone_id: int, timeout: float = DEFAULT_TIMEOUT) -> bool:
+        """Checks if a zone is read-only. This refers to the zone itself, not its
+        alarms or any other attached resources.
+
+        :param zone_id: The ID of the zone to check
+        :param timeout: The timeout to use for this request
+        :return: True if the zone is read-only
+        """
+        req = f"/api/zones/{zone_id}"
+        resp = self._options(req, timeout)
+
+        # Parse the Allow header, which is a string of comma-separated method names
+        allow_header = resp.headers["Allow"]
+        allowed_methods = allow_header.split(",")
+        allowed_methods = [m.strip().upper() for m in allowed_methods]
+
+        return "POST" not in allowed_methods
