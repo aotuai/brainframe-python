@@ -73,4 +73,4 @@ class ZoneStubMixin(BaseStub):
         allowed_methods = allow_header.split(",")
         allowed_methods = [m.strip().upper() for m in allowed_methods]
 
-        return "POST" in allowed_methods
+        return "POST" not in allowed_methods
