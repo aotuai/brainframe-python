@@ -271,6 +271,18 @@ class BaseStub:
 
         return self._send_authorized(request, timeout)
 
+    def _options(self, api_url: str, timeout: float) -> Response:
+        """Sends an OPTIONS request to the given URL, managing authentication and
+        handling errors as necessary.
+
+        :param api_url: The /api/blah/blah to append to the base_url
+        :param timeout: The timeout to use for this request
+        :return: The response object
+        """
+        request = requests.Request(method="OPTIONS", url=self._full_url(api_url))
+
+        return self._send_authorized(request, timeout)
+
     def _full_url(self, api_url):
         """Converts an API URL path to a fully qualified URL.
 
