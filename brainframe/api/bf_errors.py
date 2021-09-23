@@ -77,6 +77,11 @@ class ZoneNotDeletableError(BaseAPIError):
 
 
 @_server_origin_error()
+class ZoneNotEditableError(BaseAPIError):
+    """A client tried to edit a read-only Zone"""
+
+
+@_server_origin_error()
 class AlertNotFoundError(BaseAPIError):
     """An Alert specified by the client could not be found."""
 
