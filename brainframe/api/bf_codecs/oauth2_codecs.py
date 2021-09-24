@@ -6,7 +6,7 @@ from .base_codecs import Codec
 
 @dataclass
 class OAuth2Info(Codec):
-    """Necessary information to start an OAuth2 flow on behalf of the BrainFrame server
+    """Information necessary to start an OAuth2 flow on behalf of the BrainFrame server
     """
     domain: str
     """The domain of the OAuth2 server"""
