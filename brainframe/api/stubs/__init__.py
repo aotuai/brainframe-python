@@ -14,4 +14,5 @@ from .users import UserStubMixin
 from .licenses import LicenseStubMixIn
 from .cloud_tokens import CloudTokensStubMixin
 from .cloud_users import CloudUsersStubMixIn
+from .oauth2 import OAuth2StubMixIn
 from .base_stub import BaseStub

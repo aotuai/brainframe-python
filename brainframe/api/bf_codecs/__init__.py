@@ -23,4 +23,5 @@ from .license_codecs import (
     DATE_FORMAT,
 )
 from .cloud_codecs import CloudTokens, CloudUserInfo
+from .oauth2_codecs import OAuth2Info
 from .sorting import SortOptions, Ordering
