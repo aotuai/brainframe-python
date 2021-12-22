@@ -1,4 +1,5 @@
 import json
+import time
 from typing import Dict, Generator
 
 import requests
@@ -51,6 +52,7 @@ class ZoneStatusStubMixin(BaseStub):
             resp = self._get(req, timeout=timeout)
 
             packets = resp.iter_lines(delimiter=b"\r\n")
+            timeout_start = time.time()
             while True:
                 try:
                     packet = next(packets)
@@ -66,7 +68,10 @@ class ZoneStatusStubMixin(BaseStub):
                     raise bf_errors.ServerNotReadyError(message)
 
                 if packet == b'':
-                    continue
+                    if time.time() < timeout_start + timeout:
+                        continue
+                    else:
+                        break
 
                 # Parse the line
                 zone_statuses_dict = json.loads(packet)
