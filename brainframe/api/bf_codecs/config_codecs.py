@@ -18,7 +18,8 @@ class StreamConfiguration(Codec):
         """A webcam (usually USB)"""
         FILE = "file"
         """An uploaded video file"""
-
+        VIRTUAL = "virtual"
+        """Virtual video streaming, which can be used for offline file analysis"""
         @classmethod
         def values(cls):
             return [v.value for v in cls]
@@ -55,6 +56,9 @@ class StreamConfiguration(Codec):
 
     ConnType.WEBCAM:
         ``device_id``: The Video4Linux device ID of the webcam
+    
+    ConnType.VIRTUAL:
+        If connection_type is virtual, connection_options can be {} 
     """
 
     runtime_options: dict

@@ -24,7 +24,9 @@ class BrainFrameAPI(stubs.AlertStubMixin,
                     stubs.LicenseStubMixIn,
                     stubs.CloudTokensStubMixin,
                     stubs.CloudUsersStubMixIn,
-                    stubs.OAuth2StubMixIn):
+                    stubs.OAuth2StubMixIn,
+                    stubs.ImagesStubMixIn,
+                    stubs.ProcessVideoStubMixIn):
     """Provides access to BrainFrame API endpoints."""
 
     def __init__(self, server_url=None, credentials: Tuple[str, str] = None):

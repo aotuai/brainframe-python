@@ -1,3 +1,5 @@
+from .process_video import ProcessVideoStubMixIn
+from .images import ImagesStubMixIn
 from .alerts import AlertStubMixin
 from .analysis import AnalysisStubMixin
 from .identities import IdentityStubMixin

@@ -25,3 +25,4 @@ from .license_codecs import (
 from .cloud_codecs import CloudTokens, CloudUserInfo
 from .oauth2_codecs import OAuth2Info
 from .sorting import SortOptions, Ordering
+from .snip_codecs import Snip, AiIntervalType
