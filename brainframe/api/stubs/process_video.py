@@ -13,7 +13,8 @@ class ProcessVideoStubMixIn(BaseStub):
                       storage_uri: str,
                       ai_interval_type: AiIntervalType,
                       ai_interval_val: float,
-                      timeout=DEFAULT_TIMEOUT) \
+                      timeout=DEFAULT_TIMEOUT,
+                      priority:str = None) \
             -> Optional[int]:
         """Start a offline video analysis.
 
@@ -43,6 +44,10 @@ class ProcessVideoStubMixIn(BaseStub):
             "ai_interval_val": ai_interval_val,
             "timeout": timeout,
         }
+
+        if priority is not None:
+            params["priority"] = priority
+            
         params = json.dumps(params)
         
         data = self._post_json(req, timeout, params.encode("utf-8"))
