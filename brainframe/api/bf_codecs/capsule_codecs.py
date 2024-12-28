@@ -23,6 +23,7 @@ class CapsuleOption(Codec):
         INT = "int"
         ENUM = "enum"
         BOOL = "bool"
+        STR = "str"
 
         @classmethod
         def values(cls):
@@ -52,6 +53,9 @@ class CapsuleOption(Codec):
         ``choices``: A list of strings. The option's value must be one of
         these strings.
     
+    OptionType.STR:
+        ``text``: A free form string.
+
     OptionType.BOOL:
         This object has no constraints.
     """
