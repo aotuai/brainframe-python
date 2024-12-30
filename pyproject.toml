@@ -17,7 +17,7 @@ classifiers = [
 python = "^3.6"
 requests = "^2.24.0"
 # Pillow 8.4 doesn't seem to come precompiled
-pillow = "8.3.2"
+pillow = ">=7.0.0"
 numpy = "^1.16"
 dataclasses = { version = "^0.7", python = ">=3.6,<3.7" }
 
