@@ -1,4 +1,3 @@
-=====================
 BrainFrame Python API
 =====================
 
@@ -19,6 +18,7 @@ easy interaction with a BrainFrame server.
 
    # Connect to the server
    api = BrainFrameAPI("http://localhost")
+
    # Create a new IP camera stream
    stream_config = api.set_stream_configuration(
        bf_codecs.StreamConfiguration(
@@ -28,23 +28,54 @@ easy interaction with a BrainFrame server.
            runtime_options={},
        ))
    api.start_analyzing(stream_config.id)
+
    # Get results
    analysis_results = api.get_latest_zone_statuses()
 
+# Build brainframe-api wheel
+
+.. code-block:: bash
+
+   poetry build
+
+The output will be in dist/. Check the README format if it is updated,
+
+.. code-block:: bash
+
+   pip install readme-renderer
+   python -m readme_renderer README.rst
 
 Installation
-------------
+============
 
 The BrainFrame Python API is available on PyPI and can be installed with pip.
 Install the version of the library that matches the version of BrainFrame that
-you are using. For example, if you are using BrainFrame version 0.26.1:
+you are using.
 
 .. code-block:: bash
 
    pip3 install brainframe-api
 
+Or local build,
+
+.. code-block:: bash
+
+   pip3 install dist/{file name.whl}
+
 Documentation
--------------
+=============
+
+.. code-block:: bash
+
+   pip install sphinx sphinx-rtd-theme
+   cd docs
+   make html
+
+Read the generated docs,
+
+.. code-block:: bash
+
+   firefox _build/html/index.html
 
 Documentation for this library is available on `ReadTheDocs`_.
 

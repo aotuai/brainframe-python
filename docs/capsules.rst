@@ -12,9 +12,11 @@ API Methods
 
 .. automethod:: brainframe.api.BrainFrameAPI.get_capsules
 
-.. automethod:: brainframe.api.BrainFrameAPI.set_capsule
+.. automethod:: brainframe.api.BrainFrameAPI.load_capsule
 
-.. automethod:: brainframe.api.BrainFrameAPI.delete_capsule
+.. automethod:: brainframe.api.BrainFrameAPI.upload_and_load_capsule
+
+.. automethod:: brainframe.api.BrainFrameAPI.unload_capsule
 
 .. automethod:: brainframe.api.BrainFrameAPI.get_capsule_option_vals
 
@@ -34,3 +36,4 @@ Data Structures
 
 .. _`Introduction to Capsules`:
    https://openvisioncapsules.readthedocs.io/en/latest/introduction.html
+
