@@ -1,4 +1,5 @@
 import json
+import time
 from typing import Dict, Generator
 
 import requests
@@ -51,6 +52,7 @@ class ZoneStatusStubMixin(BaseStub):
             resp = self._get(req, timeout=timeout)
 
             packets = resp.iter_lines(delimiter=b"\r\n")
+            timeout_start = time.time()
             while True:
                 try:
                     packet = next(packets)
