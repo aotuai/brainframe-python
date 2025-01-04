@@ -66,15 +66,18 @@ class ZoneStatusStubMixin(BaseStub):
                     raise bf_errors.ServerNotReadyError(message)
 
                 if packet == b'':
-                    processed={}
-                else:
-                    # Parse the line
-                    zone_statuses_dict = json.loads(packet)
+                    if time.time() < timeout_start + timeout:
+                        continue
+                    else:
+                        break
 
-                    processed = {
-                        int(s_id): {key: bf_codecs.ZoneStatus.from_dict(val)
-                                    for key, val in statuses.items()}
-                        for s_id, statuses in zone_statuses_dict.items()}
+                # Parse the line
+                zone_statuses_dict = json.loads(packet)
+
+                processed = {
+                    int(s_id): {key: bf_codecs.ZoneStatus.from_dict(val)
+                                for key, val in statuses.items()}
+                    for s_id, statuses in zone_statuses_dict.items()}
                 yield processed
 
         return zone_status_iterator()
