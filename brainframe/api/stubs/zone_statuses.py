@@ -68,7 +68,7 @@ class ZoneStatusStubMixin(BaseStub):
                     raise bf_errors.ServerNotReadyError(message)
 
                 if packet == b'':
-                    if time.time() < timeout_start + timeout:
+                    if timeout is None or time.time() < timeout_start + timeout:
                         continue
                     else:
                         break
