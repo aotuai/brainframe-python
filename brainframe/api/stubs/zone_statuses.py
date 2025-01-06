@@ -52,8 +52,8 @@ class ZoneStatusStubMixin(BaseStub):
             resp = self._get(req, timeout=timeout)
 
             packets = resp.iter_lines(delimiter=b"\r\n")
-            timeout_start = time.time()
             while True:
+                timeout_start = time.time()
                 try:
                     packet = next(packets)
                 except requests.exceptions.ChunkedEncodingError as exc:
