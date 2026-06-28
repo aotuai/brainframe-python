@@ -35,7 +35,8 @@ class CapsuleStubMixin(StorageStubMixin):
 
     def load_capsule(self, storage_id: int,
                      source_path: Optional[Path] = None,
-                     timeout: float = DEFAULT_TIMEOUT) -> Capsule:
+                     timeout: float = DEFAULT_TIMEOUT,
+                     name: Optional[str] = None) -> Capsule:
         """Loads and initializes a capsule from capsule data in storage.
 
         :param storage_id: The ID of the raw capsule data in storage
@@ -43,6 +44,7 @@ class CapsuleStubMixin(StorageStubMixin):
             development machine can be provided. Doing so allows stack traces
             to point to the correct source location.
         :param timeout: The timeout to use for this request
+        :param name: The optional name of the capsule
         :return: The loaded capsule
         """
         req = f"/api/plugins"
@@ -52,12 +54,18 @@ class CapsuleStubMixin(StorageStubMixin):
                 "source_path": str(source_path),
             },
         }
+        
+        # Only inject the name if it is provided, maintaining backward compatibility
+        if name is not None:
+            req_object["name"] = name
+            
         capsule = self._put_json(req, timeout, json.dumps(req_object))
         return Capsule.from_dict(capsule)
 
     def upload_and_load_capsule(self, data: Union[bytes, BinaryIO],
                                 source_path: Optional[Path] = None,
-                                timeout: float = DEFAULT_TIMEOUT) -> Capsule:
+                                timeout: float = DEFAULT_TIMEOUT,
+                                name: Optional[str] = None) -> Capsule:
         """Uploads capsule data to storage, then loads and initializes a
         capsule from it. This is a utility method that combines the
         functionality of `new_storage` and `load_capsule`.
@@ -67,6 +75,7 @@ class CapsuleStubMixin(StorageStubMixin):
             development machine can be provided. Doing so allows stack traces
             to point to the correct source location.
         :param timeout: The timeout to use for each request
+        :param name: The optional name of the capsule
         :return: The loaded capsule
         """
         storage_id = self.new_storage(data,
@@ -75,7 +84,8 @@ class CapsuleStubMixin(StorageStubMixin):
 
         return self.load_capsule(storage_id,
                                  source_path,
-                                 timeout=timeout)
+                                 timeout=timeout,
+                                 name=name)
 
     def unload_capsule(self, capsule_name: str,
                        timeout: float = DEFAULT_TIMEOUT) -> None:
